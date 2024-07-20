@@ -4,7 +4,7 @@ import React from 'react';
 const Footer = () => {
   return (
     <footer>
-      <p>&copy; 2024 Hierarchy Chat Bot</p>
+      <p style={{ fontSize: '0.5em' }}>&copy; 2024 Hierarchy Chat Bot</p>
     </footer>
   );
 };
