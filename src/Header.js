@@ -4,7 +4,7 @@ import React from 'react';
 const Header = () => {
   return (
     <header>
-      <h1>Hierarchy Chat Bot</h1>
+      <h1 style={{ fontSize: '1em' }}>Hierarchy Chat Bot</h1>
     </header>
   );
 };
