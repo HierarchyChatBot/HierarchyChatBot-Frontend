@@ -10,22 +10,18 @@ import Editor from './Editor/Editor';
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <Body />
-        <Routes>
-          <Route path="/" element={
-            <>
-              <ChapterProvider>
-                <ThreeColumnLayout />
-              </ChapterProvider>
-            </>
-          } />
-          <Route path="/editor" element={<Editor />} />
-        </Routes>
-        <Footer />
-      </div>
-    </Router>
+    <ChapterProvider>
+      <Router>
+        <div className="App">
+          <Body />
+          <Routes>
+            <Route path="/" element={<ThreeColumnLayout />} />
+            <Route path="/editor" element={<Editor />} />
+          </Routes>
+          <Footer />
+        </div>
+      </Router>
+    </ChapterProvider>
   );
 }
 

@@ -1,12 +1,11 @@
 // ColumnLeft.js
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useChapter } from './ChapterContext';
 
 const ColumnLeft = () => {
-  const [chapters, setChapters] = useState([]);
-  const { selectedChapter, setSelectedChapter, setSelectedSubItem } = useChapter();
-  const [expandedChapter, setExpandedChapter] = useState(null);
+  const { chapters, setChapters, selectedChapter, setSelectedChapter, setSelectedSubItem } = useChapter();
+  const [expandedChapter, setExpandedChapter] = React.useState(null);
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -16,7 +15,7 @@ const ColumnLeft = () => {
     reader.onload = (e) => {
       try {
         const data = JSON.parse(e.target.result);
-        setChapters(data);
+        setChapters(data);  // Update context chapters
       } catch (error) {
         console.error('Error parsing JSON:', error);
       }

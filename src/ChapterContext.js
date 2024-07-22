@@ -7,6 +7,7 @@ const ChapterContext = createContext();
 export const ChapterProvider = ({ children }) => {
   const [selectedChapter, setSelectedChapter] = useState(null);
   const [selectedSubItem, setSelectedSubItem] = useState(null);
+  const [chapters, setChapters] = useState([]);  // Added chapters state
   const [chatHistory, setChatHistory] = useState([]);
 
   const addMessage = (message) => {
@@ -20,6 +21,8 @@ export const ChapterProvider = ({ children }) => {
         setSelectedChapter,
         selectedSubItem,
         setSelectedSubItem,
+        chapters,           // Provide chapters state
+        setChapters,        // Provide setter for chapters
         chatHistory,
         addMessage,
       }}
