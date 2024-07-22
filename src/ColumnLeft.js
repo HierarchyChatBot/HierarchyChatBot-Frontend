@@ -4,24 +4,8 @@ import React from 'react';
 import { useChapter } from './ChapterContext';
 
 const ColumnLeft = () => {
-  const { chapters, setChapters, selectedChapter, setSelectedChapter, setSelectedSubItem } = useChapter();
+  const { chapters, selectedChapter, setSelectedChapter, setSelectedSubItem } = useChapter();
   const [expandedChapter, setExpandedChapter] = React.useState(null);
-
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const data = JSON.parse(e.target.result);
-        setChapters(data);  // Update context chapters
-      } catch (error) {
-        console.error('Error parsing JSON:', error);
-      }
-    };
-    reader.readAsText(file);
-  };
 
   const handleChapterClick = (chapter) => {
     setSelectedChapter(chapter);
@@ -59,12 +43,6 @@ const ColumnLeft = () => {
   return (
     <div style={columnStyles} className="column left-column">
       <h2>Chapters</h2>
-      <input
-        type="file"
-        accept=".json"
-        onChange={handleFileUpload}
-        style={{ marginBottom: '10px' }}
-      />
       <div style={chaptersListStyles} className="chapters-list">
         {chapters.map((chapter, index) => (
           <div key={index}>
