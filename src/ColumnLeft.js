@@ -1,6 +1,6 @@
 // ColumnLeft.js
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useChapter } from './ChapterContext';
 
 const ColumnLeft = () => {
@@ -8,12 +8,21 @@ const ColumnLeft = () => {
   const { selectedChapter, setSelectedChapter, setSelectedSubItem } = useChapter();
   const [expandedChapter, setExpandedChapter] = useState(null);
 
-  useEffect(() => {
-    fetch('/chapters.json')
-      .then(response => response.json())
-      .then(data => setChapters(data))
-      .catch(error => console.error('Error fetching the chapters:', error));
-  }, []);
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target.result);
+        setChapters(data);
+      } catch (error) {
+        console.error('Error parsing JSON:', error);
+      }
+    };
+    reader.readAsText(file);
+  };
 
   const handleChapterClick = (chapter) => {
     setSelectedChapter(chapter);
@@ -51,6 +60,12 @@ const ColumnLeft = () => {
   return (
     <div style={columnStyles} className="column left-column">
       <h2>Chapters</h2>
+      <input
+        type="file"
+        accept=".json"
+        onChange={handleFileUpload}
+        style={{ marginBottom: '10px' }}
+      />
       <div style={chaptersListStyles} className="chapters-list">
         {chapters.map((chapter, index) => (
           <div key={index}>
