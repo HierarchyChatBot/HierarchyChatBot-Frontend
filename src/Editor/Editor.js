@@ -1,13 +1,23 @@
 // Editor.js
+// EditorLayout.js
 import React from 'react';
+import EditorLeft from './EditorLeft';
+import EditorRight from './EditorRight';
 
-const Editor = () => {
+const EditorLayout = () => {
+  const baseStyles = {
+    display: 'grid',
+    gridTemplateColumns: '2fr 1fr',
+    gap: '10px',
+    padding: '10px',
+  };
+
   return (
-    <div>
-      <h1>Editor</h1>
-      <textarea style={{ width: '100%', height: '90vh' }}></textarea>
+    <div style={baseStyles} className="editor-layout">
+      <EditorLeft />
+      <EditorRight />
     </div>
   );
 };
 
-export default Editor;
+export default EditorLayout;
