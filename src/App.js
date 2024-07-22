@@ -2,22 +2,20 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
-import Header from './Header';
-import MainContent from './MainContent';
+import Body from './Body';
 import Footer from './Footer';
 import ThreeColumnLayout from './ThreeColumnLayout';
 import { ChapterProvider } from './ChapterContext';
-import Editor from './Editor';
+import Editor from './Editor/Editor';
 
 function App() {
   return (
     <Router>
       <div className="App">
-        <Header />
+        <Body />
         <Routes>
           <Route path="/" element={
             <>
-              <MainContent />
               <ChapterProvider>
                 <ThreeColumnLayout />
               </ChapterProvider>

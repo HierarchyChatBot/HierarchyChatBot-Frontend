@@ -1,10 +1,10 @@
-// Header.js
+// Body.js
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const Header = () => {
+const Body = () => {
   return (
-    <header>
+    <body>
       <nav>
         <Link to="/">
           <button style={{ marginLeft: '10px' }}>Chat Bot</button>
@@ -13,8 +13,8 @@ const Header = () => {
           <button style={{ marginLeft: '10px' }}>Open Editor</button>
         </Link>
       </nav>
-    </header>
+    </body>
   );
 };
 
-export default Header;
+export default Body;
