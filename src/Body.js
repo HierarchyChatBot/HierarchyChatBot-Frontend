@@ -5,27 +5,22 @@ import { Link } from 'react-router-dom';
 import { useChapter } from './ChapterContext';
 
 const Body = () => {
-  const { setChapters } = useChapter();
+  const { loadChaptersFromFile, saveChaptersToFile } = useChapter();
   const fileInputRef = useRef(null);
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const data = JSON.parse(e.target.result);
-        setChapters(data);  // Update context chapters
-      } catch (error) {
-        console.error('Error parsing JSON:', error);
-      }
-    };
-    reader.readAsText(file);
+    if (file) {
+      loadChaptersFromFile(file);
+    }
   };
 
   const handleButtonClick = () => {
     fileInputRef.current.click();
+  };
+
+  const handleSaveClick = () => {
+    saveChaptersToFile('chapters.json');
   };
 
   return (
@@ -45,6 +40,7 @@ const Body = () => {
           style={{ display: 'none' }} // Hide the default file input
         />
         <button onClick={handleButtonClick} style={{ marginLeft: '10px' }}>Load</button>
+        <button onClick={handleSaveClick} style={{ marginLeft: '10px' }}>Save</button>
       </nav>
     </div>
   );
