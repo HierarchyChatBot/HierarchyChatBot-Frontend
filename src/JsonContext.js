@@ -1,8 +1,8 @@
-// ChapterContext.js
+// JsonContext.js
 
 import React, { createContext, useState, useContext } from 'react';
 
-const ChapterContext = createContext();
+const JsonContext = createContext();
 
 export const ChapterProvider = ({ children }) => {
   const [selectedChapter, setSelectedChapter] = useState(null);
@@ -42,7 +42,7 @@ export const ChapterProvider = ({ children }) => {
   };
 
   return (
-    <ChapterContext.Provider
+    <JsonContext.Provider
       value={{
         selectedChapter,
         setSelectedChapter,
@@ -58,8 +58,8 @@ export const ChapterProvider = ({ children }) => {
       }}
     >
       {children}
-    </ChapterContext.Provider>
+    </JsonContext.Provider>
   );
 };
 
-export const useChapter = () => useContext(ChapterContext);
+export const useChapter = () => useContext(JsonContext);

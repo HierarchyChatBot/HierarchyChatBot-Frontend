@@ -5,7 +5,7 @@ import './App.css';
 import Body from './Body';
 import Footer from './Footer';
 import ThreeColumnLayout from './ThreeColumnLayout';
-import { ChapterProvider } from './ChapterContext';
+import { ChapterProvider } from './JsonContext';
 import Editor from './Editor/Editor';
 
 function App() {
