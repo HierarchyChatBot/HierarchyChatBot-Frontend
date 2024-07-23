@@ -1,4 +1,4 @@
-// EditorLeft.js
+// Editor/EditorLeft.js
 
 import React from 'react';
 import { useChapter } from '../JsonContext';

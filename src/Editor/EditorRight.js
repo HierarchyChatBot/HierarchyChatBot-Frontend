@@ -1,4 +1,5 @@
-// EditorRight.js
+// Editor/EditorRight.js
+
 import React from 'react';
 
 const EditorRight = () => {

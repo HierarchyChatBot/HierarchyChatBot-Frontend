@@ -1,7 +1,7 @@
 // ColumnLeft.js
 
 import React from 'react';
-import { useChapter } from './JsonContext';
+import { useChapter } from '../JsonContext';
 
 const ColumnLeft = () => {
   const { chapters, selectedChapter, setSelectedChapter, setSelectedSubItem } = useChapter();

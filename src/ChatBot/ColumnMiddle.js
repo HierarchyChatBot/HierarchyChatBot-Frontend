@@ -1,7 +1,7 @@
 // ColumnMiddle.js
 
 import React from 'react';
-import { useChapter } from './JsonContext';
+import { useChapter } from '../JsonContext';
 
 const ColumnMiddle = () => {
   const { selectedChapter, selectedSubItem } = useChapter();

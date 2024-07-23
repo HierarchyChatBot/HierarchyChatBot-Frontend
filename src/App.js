@@ -1,12 +1,13 @@
 // App.js
+
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Body from './Body';
 import Footer from './Footer';
-import ThreeColumnLayout from './ThreeColumnLayout';
+import ThreeColumnLayout from './ChatBot/ChatLayout';
 import { ChapterProvider } from './JsonContext';
-import Editor from './Editor/Editor';
+import Editor from './Editor/EditorLayout';
 
 function App() {
   return (

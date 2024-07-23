@@ -1,7 +1,7 @@
 // ColumnRight.js
 
 import React, { useState } from 'react';
-import { useChapter } from './JsonContext';
+import { useChapter } from '../JsonContext';
 
 const ColumnRight = () => {
   const { chatHistory, addMessage } = useChapter();
