@@ -1,6 +1,5 @@
 // Editor/EditorLeft.js
 
-
 import React from 'react';
 import { useChapter } from '../JsonContext';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
@@ -12,9 +11,12 @@ const EditorLeft = () => {
     setSelectedChapter,
     setSelectedSubItem,
     reorderChapters,
+    setChapters, // Add this for updating chapters
   } = useChapter();
 
   const [expandedChapter, setExpandedChapter] = React.useState(null);
+  const [editingChapter, setEditingChapter] = React.useState(null);
+  const [newTitle, setNewTitle] = React.useState('');
 
   const handleChapterClick = (chapter) => {
     setSelectedChapter(chapter);
@@ -33,6 +35,26 @@ const EditorLeft = () => {
   const handleDragEnd = (result) => {
     if (!result.destination) return; // If there's no destination, exit
     reorderChapters(result.source.index, result.destination.index);
+  };
+
+  const handleEditClick = (chapter) => {
+    setEditingChapter(chapter);
+    setNewTitle(chapter.title);
+  };
+
+  const handleSaveClick = () => {
+    setChapters(prevChapters =>
+      prevChapters.map(chapter =>
+        chapter === editingChapter ? { ...chapter, title: newTitle } : chapter
+      )
+    );
+    setEditingChapter(null);
+    setNewTitle('');
+  };
+
+  const handleCancelClick = () => {
+    setEditingChapter(null);
+    setNewTitle('');
   };
 
   const columnStyles = {
@@ -67,6 +89,12 @@ const EditorLeft = () => {
     cursor: 'pointer',
   };
 
+  const editButtonStyles = {
+    marginLeft: '10px',
+    color: 'blue',
+    cursor: 'pointer',
+  };
+
   return (
     <div style={columnStyles} className="column left-column">
       <h2>Chapters</h2>
@@ -96,16 +124,43 @@ const EditorLeft = () => {
                       className="chapter"
                       onClick={() => handleChapterClick(chapter)}
                     >
-                      <h3>{chapter.title}</h3>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation(); // Stop click event from affecting parent div
-                          handleDeleteClick(chapter);
-                        }}
-                        style={buttonStyles}
-                      >
-                        -
-                      </button>
+                      {editingChapter === chapter ? (
+                        <div>
+                          <input
+                            type="text"
+                            value={newTitle}
+                            onChange={(e) => setNewTitle(e.target.value)}
+                          />
+                          <button onClick={handleSaveClick} style={buttonStyles}>
+                            Save
+                          </button>
+                          <button onClick={handleCancelClick} style={buttonStyles}>
+                            Cancel
+                          </button>
+                        </div>
+                      ) : (
+                        <div>
+                          <h3>{chapter.title}</h3>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation(); // Stop click event from affecting parent div
+                              handleDeleteClick(chapter);
+                            }}
+                            style={buttonStyles}
+                          >
+                            -
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEditClick(chapter);
+                            }}
+                            style={editButtonStyles}
+                          >
+                            Edit
+                          </button>
+                        </div>
+                      )}
                     </div>
                   )}
                 </Draggable>
