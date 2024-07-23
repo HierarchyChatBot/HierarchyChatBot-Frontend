@@ -1,10 +1,19 @@
 // Editor/EditorLeft.js
 
+
 import React from 'react';
 import { useChapter } from '../JsonContext';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 const EditorLeft = () => {
-  const { chapters, removeChapter, setSelectedChapter, setSelectedSubItem } = useChapter();
+  const {
+    chapters,
+    removeChapter,
+    setSelectedChapter,
+    setSelectedSubItem,
+    reorderChapters,
+  } = useChapter();
+
   const [expandedChapter, setExpandedChapter] = React.useState(null);
 
   const handleChapterClick = (chapter) => {
@@ -21,6 +30,11 @@ const EditorLeft = () => {
     removeChapter(chapter);
   };
 
+  const handleDragEnd = (result) => {
+    if (!result.destination) return; // If there's no destination, exit
+    reorderChapters(result.source.index, result.destination.index);
+  };
+
   const columnStyles = {
     border: '1px solid #ddd',
     padding: '20px',
@@ -29,60 +43,78 @@ const EditorLeft = () => {
     maxHeight: '80vh',
   };
 
-  const chaptersListStyles = {
-    display: 'flex',
-    flexDirection: 'column',
-  };
-
   const chapterStyles = {
     marginBottom: '10px',
     cursor: 'pointer',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
+    padding: '10px',
+    backgroundColor: '#fff',
+    borderRadius: '4px',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
   };
 
   const subItemStyles = {
     marginLeft: '20px',
+    cursor: 'pointer',
+    padding: '5px',
+  };
+
+  const buttonStyles = {
+    marginLeft: '10px',
+    color: 'red',
     cursor: 'pointer',
   };
 
   return (
     <div style={columnStyles} className="column left-column">
       <h2>Chapters</h2>
-      <div style={chaptersListStyles} className="chapters-list">
-        {chapters.map((chapter, index) => (
-          <div key={index}>
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <Droppable droppableId="chaptersList">
+          {(provided) => (
             <div
-              style={chapterStyles}
-              className="chapter"
-              onClick={() => handleChapterClick(chapter)}
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
             >
-              <h3>{chapter.title}</h3>
-              <button
-                onClick={() => handleDeleteClick(chapter)}
-                style={{ marginLeft: '10px', color: 'red', cursor: 'pointer' }}
-              >
-                -
-              </button>
+              {chapters.map((chapter, index) => (
+                <Draggable
+                  key={chapter.title}
+                  draggableId={chapter.title}
+                  index={index}
+                >
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      style={{
+                        ...chapterStyles,
+                        ...provided.draggableProps.style,
+                      }}
+                      className="chapter"
+                      onClick={() => handleChapterClick(chapter)}
+                    >
+                      <h3>{chapter.title}</h3>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation(); // Stop click event from affecting parent div
+                          handleDeleteClick(chapter);
+                        }}
+                        style={buttonStyles}
+                      >
+                        -
+                      </button>
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
             </div>
-            {expandedChapter === chapter && chapter.subItems && (
-              <div>
-                {chapter.subItems.map((subItem, subIndex) => (
-                  <div
-                    key={subIndex}
-                    style={subItemStyles}
-                    className="sub-item"
-                    onClick={() => handleSubItemClick(subItem)}
-                  >
-                    {subItem.title}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
+          )}
+        </Droppable>
+      </DragDropContext>
     </div>
   );
 };

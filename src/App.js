@@ -1,7 +1,7 @@
 // App.js
 
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import './App.css';
 import Body from './Body';
 import Footer from './Footer';
@@ -9,16 +9,28 @@ import ThreeColumnLayout from './ChatBot/ChatLayout';
 import { ChapterProvider } from './JsonContext';
 import Editor from './Editor/EditorLayout';
 
+// Component to conditionally apply StrictMode
+const ConditionalStrictMode = ({ children }) => {
+  const location = useLocation();
+  
+  // Apply StrictMode to all routes except '/editor'
+  const useStrictMode = location.pathname !== '/editor';
+
+  return useStrictMode ? <React.StrictMode>{children}</React.StrictMode> : <>{children}</>;
+};
+
 function App() {
   return (
     <ChapterProvider>
       <Router>
         <div className="App">
           <Body />
-          <Routes>
-            <Route path="/" element={<ThreeColumnLayout />} />
-            <Route path="/editor" element={<Editor />} />
-          </Routes>
+          <ConditionalStrictMode>
+            <Routes>
+              <Route path="/" element={<ThreeColumnLayout />} />
+              <Route path="/editor" element={<Editor />} />
+            </Routes>
+          </ConditionalStrictMode>
           <Footer />
         </div>
       </Router>

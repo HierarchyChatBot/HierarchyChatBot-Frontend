@@ -41,6 +41,16 @@ export const ChapterProvider = ({ children }) => {
     setChapters(prevChapters => prevChapters.filter(chapter => chapter !== chapterToRemove));
   };
 
+  // Function to handle reordering based on drag-and-drop
+  const reorderChapters = (startIndex, endIndex) => {
+    setChapters((prevChapters) => {
+      const newChapters = Array.from(prevChapters);
+      const [movedChapter] = newChapters.splice(startIndex, 1);
+      newChapters.splice(endIndex, 0, movedChapter);
+      return newChapters;
+    });
+  };
+
   return (
     <JsonContext.Provider
       value={{
@@ -55,6 +65,7 @@ export const ChapterProvider = ({ children }) => {
         loadChaptersFromFile,
         saveChaptersToFile,
         removeChapter,
+        reorderChapters, // Add this to context
       }}
     >
       {children}
