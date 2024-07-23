@@ -11,7 +11,8 @@ const EditorLeft = () => {
     setSelectedChapter,
     setSelectedSubItem,
     reorderChapters,
-    setChapters, // Add this for updating chapters
+    setChapters,
+    addChapter, // Add this for adding new chapters
   } = useChapter();
 
   const handleChapterClick = (chapter) => {
@@ -27,6 +28,15 @@ const EditorLeft = () => {
     );
   };
 
+  const handleAddChapter = () => {
+    const newChapter = {
+      title: 'New Chapter',
+      description: '',
+      subItems: []
+    };
+    addChapter(newChapter);
+  };
+
   return (
     <div style={{
       border: '1px solid #ddd',
@@ -36,6 +46,20 @@ const EditorLeft = () => {
       maxHeight: '80vh',
     }} className="column left-column">
       <h2>Chapters</h2>
+      <button
+        onClick={handleAddChapter}
+        style={{
+          marginBottom: '10px',
+          padding: '10px',
+          border: 'none',
+          borderRadius: '4px',
+          backgroundColor: '#007bff',
+          color: '#fff',
+          cursor: 'pointer',
+        }}
+      >
+        Add Chapter
+      </button>
       <ChapterList
         chapters={chapters}
         reorderChapters={reorderChapters}

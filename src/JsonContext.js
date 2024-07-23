@@ -41,7 +41,6 @@ export const ChapterProvider = ({ children }) => {
     setChapters(prevChapters => prevChapters.filter(chapter => chapter !== chapterToRemove));
   };
 
-  // Function to handle reordering based on drag-and-drop
   const reorderChapters = (startIndex, endIndex) => {
     setChapters((prevChapters) => {
       const newChapters = Array.from(prevChapters);
@@ -49,6 +48,11 @@ export const ChapterProvider = ({ children }) => {
       newChapters.splice(endIndex, 0, movedChapter);
       return newChapters;
     });
+  };
+
+  // Function to handle adding a new chapter
+  const addChapter = (newChapter) => {
+    setChapters(prevChapters => [...prevChapters, newChapter]);
   };
 
   return (
@@ -65,7 +69,8 @@ export const ChapterProvider = ({ children }) => {
         loadChaptersFromFile,
         saveChaptersToFile,
         removeChapter,
-        reorderChapters, // Add this to context
+        reorderChapters,
+        addChapter, // Add this to context
       }}
     >
       {children}
