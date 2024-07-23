@@ -1,0 +1,66 @@
+// Editor/ChapterItem.js
+
+import React from 'react';
+import EditChapter from './EditChapter';
+
+const ChapterItem = ({ chapter, onEditClick, onDeleteClick }) => {
+  const [isEditing, setIsEditing] = React.useState(false);
+  const [newTitle, setNewTitle] = React.useState(chapter.title);
+
+  const handleSaveClick = () => {
+    onEditClick(chapter, newTitle);
+    setIsEditing(false);
+  };
+
+  const handleCancelClick = () => {
+    setIsEditing(false);
+    setNewTitle(chapter.title);
+  };
+
+  return (
+    <div style={{
+      marginBottom: '10px',
+      cursor: 'pointer',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: '10px',
+      backgroundColor: '#fff',
+      borderRadius: '4px',
+      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+    }}>
+      {isEditing ? (
+        <EditChapter
+          newTitle={newTitle}
+          onTitleChange={(e) => setNewTitle(e.target.value)}
+          onSaveClick={handleSaveClick}
+          onCancelClick={handleCancelClick}
+        />
+      ) : (
+        <div>
+          <h3>{chapter.title}</h3>
+          <button
+            onClick={(e) => {
+              e.stopPropagation(); // Stop click event from affecting parent div
+              onDeleteClick(chapter);
+            }}
+            style={{ marginLeft: '10px', color: 'red', cursor: 'pointer' }}
+          >
+            -
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsEditing(true);
+            }}
+            style={{ marginLeft: '10px', color: 'blue', cursor: 'pointer' }}
+          >
+            Edit
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ChapterItem;
