@@ -1,7 +1,7 @@
 // EditorLeft.js
 
 import React from 'react';
-import { useChapter } from '../ChapterContext';
+import { useChapter } from '../JsonContext';
 
 const EditorLeft = () => {
   const { chapters, removeChapter, setSelectedChapter, setSelectedSubItem } = useChapter();

@@ -2,7 +2,7 @@
 
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { useChapter } from './ChapterContext';
+import { useChapter } from './JsonContext';
 
 const Body = () => {
   const { loadChaptersFromFile, saveChaptersToFile } = useChapter();
