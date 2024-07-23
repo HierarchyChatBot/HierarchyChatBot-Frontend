@@ -18,17 +18,19 @@ const ChapterItem = ({ chapter, onEditClick, onDeleteClick }) => {
   };
 
   return (
-    <div style={{
-      marginBottom: '10px',
-      cursor: 'pointer',
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      padding: '10px',
-      backgroundColor: '#fff',
-      borderRadius: '4px',
-      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-    }}>
+    <div
+      style={{
+        marginBottom: '10px',
+        cursor: 'pointer',
+        display: 'flex',
+        justifyContent: 'space-between', // Keep elements spaced between
+        alignItems: 'center',
+        padding: '10px',
+        backgroundColor: '#fff',
+        borderRadius: '4px',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+      }}
+    >
       {isEditing ? (
         <EditChapter
           newTitle={newTitle}
@@ -37,27 +39,30 @@ const ChapterItem = ({ chapter, onEditClick, onDeleteClick }) => {
           onCancelClick={handleCancelClick}
         />
       ) : (
-        <div>
-          <h3>{chapter.title}</h3>
-          <button
-            onClick={(e) => {
-              e.stopPropagation(); // Stop click event from affecting parent div
-              onDeleteClick(chapter);
-            }}
-            style={{ marginLeft: '10px', color: 'red', cursor: 'pointer' }}
-          >
-            -
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsEditing(true);
-            }}
-            style={{ marginLeft: '10px', color: 'blue', cursor: 'pointer' }}
-          >
-            Edit
-          </button>
-        </div>
+        <>
+          <h3 style={{ margin: 0 }}>{chapter.title}</h3>
+          <div style={{ marginLeft: 'auto' }}>
+            {/* This new container will push the buttons to the right */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation(); // Stop click event from affecting parent div
+                onDeleteClick(chapter);
+              }}
+              style={{ marginLeft: '10px', color: 'red', cursor: 'pointer' }}
+            >
+              -
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsEditing(true);
+              }}
+              style={{ marginLeft: '10px', color: 'blue', cursor: 'pointer' }}
+            >
+              Edit
+            </button>
+          </div>
+        </>
       )}
     </div>
   );
