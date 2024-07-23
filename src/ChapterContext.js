@@ -37,6 +37,10 @@ export const ChapterProvider = ({ children }) => {
     URL.revokeObjectURL(url);
   };
 
+  const removeChapter = (chapterToRemove) => {
+    setChapters(prevChapters => prevChapters.filter(chapter => chapter !== chapterToRemove));
+  };
+
   return (
     <ChapterContext.Provider
       value={{
@@ -50,6 +54,7 @@ export const ChapterProvider = ({ children }) => {
         addMessage,
         loadChaptersFromFile,
         saveChaptersToFile,
+        removeChapter,
       }}
     >
       {children}
