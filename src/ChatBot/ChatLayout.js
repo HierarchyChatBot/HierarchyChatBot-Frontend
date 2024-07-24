@@ -1,11 +1,11 @@
-// ThreeColumnLayout.js
+// ChatLayout.js
 
 import React from 'react';
-import ColumnLeft from './ColumnLeft';
-import ColumnMiddle from './ColumnMiddle';
-import ColumnRight from './ColumnRight';
+import ColumnLeft from './ChatLeft';
+import ColumnMiddle from './ChatMiddle';
+import ColumnRight from './ChatRight';
 
-const ThreeColumnLayout = () => {
+const ChatLayout = () => {
   const baseStyles = {
     display: 'grid',
     gridTemplateColumns: '1fr 1fr 1fr',
@@ -22,4 +22,4 @@ const ThreeColumnLayout = () => {
   );
 };
 
-export default ThreeColumnLayout;
+export default ChatLayout;

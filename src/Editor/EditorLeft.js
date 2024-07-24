@@ -1,7 +1,7 @@
 // Editor/EditorLeft.js
 
 import React from 'react';
-import { useChapter } from '../JsonContext';
+import { useChapter } from '../JsonState';
 import ChapterList from './ChapterList';
 
 const EditorLeft = () => {

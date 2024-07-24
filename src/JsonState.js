@@ -1,9 +1,9 @@
-// JsonContext.js
+// JsonState.js
 
 import React, { createContext, useState, useContext } from 'react';
 import { v4 as uuidv4 } from 'uuid';  // Import the UUID function
 
-const JsonContext = createContext();
+const JsonState = createContext();
 
 export const ChapterProvider = ({ children }) => {
   const [selectedChapter, setSelectedChapter] = useState(null);
@@ -57,7 +57,7 @@ export const ChapterProvider = ({ children }) => {
   };
 
   return (
-    <JsonContext.Provider
+    <JsonState.Provider
       value={{
         selectedChapter,
         setSelectedChapter,
@@ -75,8 +75,8 @@ export const ChapterProvider = ({ children }) => {
       }}
     >
       {children}
-    </JsonContext.Provider>
+    </JsonState.Provider>
   );
 };
 
-export const useChapter = () => useContext(JsonContext);
+export const useChapter = () => useContext(JsonState);

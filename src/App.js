@@ -5,8 +5,8 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import './App.css';
 import Body from './Body';
 import Footer from './Footer';
-import ThreeColumnLayout from './ChatBot/ChatLayout';
-import { ChapterProvider } from './JsonContext';
+import ChatLayout from './ChatBot/ChatLayout';
+import { ChapterProvider } from './JsonState';
 import Editor from './Editor/EditorLayout';
 
 // Component to conditionally apply StrictMode
@@ -27,7 +27,7 @@ function App() {
           <Body />
           <ConditionalStrictMode>
             <Routes>
-              <Route path="/" element={<ThreeColumnLayout />} />
+              <Route path="/" element={<ChatLayout />} />
               <Route path="/editor" element={<Editor />} />
             </Routes>
           </ConditionalStrictMode>

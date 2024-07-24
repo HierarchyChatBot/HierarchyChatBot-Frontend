@@ -1,7 +1,7 @@
 // Editor/EditorRight.js
 
 import React, { useState, useEffect } from 'react';
-import { useChapter } from '../JsonContext';
+import { useChapter } from '../JsonState';
 
 const EditorRight = () => {
   const { selectedChapter, setChapters } = useChapter();

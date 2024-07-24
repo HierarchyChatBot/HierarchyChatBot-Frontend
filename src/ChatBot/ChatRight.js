@@ -1,9 +1,9 @@
-// ColumnRight.js
+// ChatRight.js
 
 import React, { useState } from 'react';
-import { useChapter } from '../JsonContext';
+import { useChapter } from '../JsonState';
 
-const ColumnRight = () => {
+const ChatRight = () => {
   const { chatHistory, addMessage } = useChapter();
   const [inputValue, setInputValue] = useState('');
 
@@ -40,4 +40,4 @@ const ColumnRight = () => {
   );
 };
 
-export default ColumnRight;
+export default ChatRight;

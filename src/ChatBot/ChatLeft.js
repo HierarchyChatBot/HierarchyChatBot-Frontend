@@ -1,9 +1,9 @@
-// ColumnLeft.js
+// ChatLeft.js
 
 import React from 'react';
-import { useChapter } from '../JsonContext';
+import { useChapter } from '../JsonState';
 
-const ColumnLeft = () => {
+const ChatLeft = () => {
   const { chapters, selectedChapter, setSelectedChapter, setSelectedSubItem } = useChapter();
   const [expandedChapter, setExpandedChapter] = React.useState(null);
 
@@ -78,4 +78,4 @@ const ColumnLeft = () => {
   );
 };
 
-export default ColumnLeft;
+export default ChatLeft;

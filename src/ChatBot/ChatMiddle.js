@@ -1,9 +1,9 @@
-// ColumnMiddle.js
+// ChatMiddle.js
 
 import React from 'react';
-import { useChapter } from '../JsonContext';
+import { useChapter } from '../JsonState';
 
-const ColumnMiddle = () => {
+const ChatMiddle = () => {
   const { selectedChapter, selectedSubItem } = useChapter();
 
   const columnStyles = {
@@ -33,4 +33,4 @@ const ColumnMiddle = () => {
   );
 };
 
-export default ColumnMiddle;
+export default ChatMiddle;
