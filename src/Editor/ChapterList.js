@@ -21,8 +21,8 @@ const ChapterList = ({ chapters, reorderChapters, onEditClick, onDeleteClick }) 
           >
             {chapters.map((chapter, index) => (
               <Draggable
-                key={chapter.title}
-                draggableId={chapter.title}
+                key={chapter.id}  // Use the unique ID here
+                draggableId={chapter.id}  // Use the unique ID here
                 index={index}
               >
                 {(provided) => (

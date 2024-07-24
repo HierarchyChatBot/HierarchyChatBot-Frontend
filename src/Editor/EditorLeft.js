@@ -12,7 +12,7 @@ const EditorLeft = () => {
     setSelectedSubItem,
     reorderChapters,
     setChapters,
-    addChapter, // Add this for adding new chapters
+    addChapter,
   } = useChapter();
 
   const handleChapterClick = (chapter) => {
@@ -23,7 +23,7 @@ const EditorLeft = () => {
   const handleEditClick = (chapter, newTitle) => {
     setChapters(prevChapters =>
       prevChapters.map(ch =>
-        ch === chapter ? { ...ch, title: newTitle } : ch
+        ch.id === chapter.id ? { ...ch, title: newTitle } : ch
       )
     );
   };
@@ -32,19 +32,22 @@ const EditorLeft = () => {
     const newChapter = {
       title: 'New Chapter',
       description: '',
-      subItems: []
+      subItems: [],
     };
     addChapter(newChapter);
   };
 
   return (
-    <div style={{
-      border: '1px solid #ddd',
-      padding: '20px',
-      backgroundColor: '#f9f9f9',
-      overflowY: 'auto',
-      maxHeight: '80vh',
-    }} className="column left-column">
+    <div
+      style={{
+        border: '1px solid #ddd',
+        padding: '20px',
+        backgroundColor: '#f9f9f9',
+        overflowY: 'auto',
+        maxHeight: '80vh',
+      }}
+      className="column left-column"
+    >
       <h2>Chapters</h2>
       <button
         onClick={handleAddChapter}
