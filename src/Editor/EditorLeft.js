@@ -13,6 +13,7 @@ const EditorLeft = () => {
     reorderChapters,
     setChapters,
     addChapter,
+    selectedChapter, // Add this to highlight the selected chapter
   } = useChapter();
 
   const handleChapterClick = (chapter) => {
@@ -21,8 +22,8 @@ const EditorLeft = () => {
   };
 
   const handleEditClick = (chapter, newTitle) => {
-    setChapters(prevChapters =>
-      prevChapters.map(ch =>
+    setChapters((prevChapters) =>
+      prevChapters.map((ch) =>
         ch.id === chapter.id ? { ...ch, title: newTitle } : ch
       )
     );
@@ -68,6 +69,8 @@ const EditorLeft = () => {
         reorderChapters={reorderChapters}
         onEditClick={handleEditClick}
         onDeleteClick={removeChapter}
+        onChapterClick={handleChapterClick} // Pass the click handler
+        selectedChapter={selectedChapter} // Pass the selected chapter for highlighting
       />
     </div>
   );

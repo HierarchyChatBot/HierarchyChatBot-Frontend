@@ -30,10 +30,14 @@ const ColumnLeft = () => {
     flexDirection: 'column',
   };
 
-  const chapterStyles = {
+  const chapterStyles = (chapter) => ({
     marginBottom: '10px',
     cursor: 'pointer',
-  };
+    backgroundColor: selectedChapter && chapter.id === selectedChapter.id ? '#e0e0e0' : 'transparent',
+    borderRadius: '4px',
+    padding: '10px',
+    transition: 'background-color 0.3s ease',
+  });
 
   const subItemStyles = {
     marginLeft: '20px',
@@ -45,9 +49,9 @@ const ColumnLeft = () => {
       <h2>Chapters</h2>
       <div style={chaptersListStyles} className="chapters-list">
         {chapters.map((chapter, index) => (
-          <div key={index}>
+          <div key={chapter.id}> {/* Use chapter.id as the key */}
             <div
-              style={chapterStyles}
+              style={chapterStyles(chapter)}
               className="chapter"
               onClick={() => handleChapterClick(chapter)}
             >

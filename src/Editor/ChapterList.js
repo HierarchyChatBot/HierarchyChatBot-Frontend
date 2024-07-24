@@ -4,7 +4,7 @@ import React from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import ChapterItem from './ChapterItem';
 
-const ChapterList = ({ chapters, reorderChapters, onEditClick, onDeleteClick }) => {
+const ChapterList = ({ chapters, reorderChapters, onEditClick, onDeleteClick, onChapterClick, selectedChapter }) => {
   const handleDragEnd = (result) => {
     if (!result.destination) return; // If there's no destination, exit
     reorderChapters(result.source.index, result.destination.index);
@@ -21,8 +21,8 @@ const ChapterList = ({ chapters, reorderChapters, onEditClick, onDeleteClick }) 
           >
             {chapters.map((chapter, index) => (
               <Draggable
-                key={chapter.id}  // Use the unique ID here
-                draggableId={chapter.id}  // Use the unique ID here
+                key={chapter.id} // Use a unique ID for each chapter
+                draggableId={chapter.id}
                 index={index}
               >
                 {(provided) => (
@@ -35,6 +35,8 @@ const ChapterList = ({ chapters, reorderChapters, onEditClick, onDeleteClick }) 
                       chapter={chapter}
                       onEditClick={onEditClick}
                       onDeleteClick={onDeleteClick}
+                      onChapterClick={onChapterClick} // Add the chapter click handler
+                      isSelected={selectedChapter && chapter.id === selectedChapter.id} // Highlight the selected chapter
                     />
                   </div>
                 )}

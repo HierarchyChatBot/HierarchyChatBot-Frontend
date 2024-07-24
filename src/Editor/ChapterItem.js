@@ -3,7 +3,7 @@
 import React from 'react';
 import EditChapter from './EditChapter';
 
-const ChapterItem = ({ chapter, onEditClick, onDeleteClick }) => {
+const ChapterItem = ({ chapter, onEditClick, onDeleteClick, onChapterClick, isSelected }) => {
   const [isEditing, setIsEditing] = React.useState(false);
   const [newTitle, setNewTitle] = React.useState(chapter.title);
 
@@ -17,19 +17,23 @@ const ChapterItem = ({ chapter, onEditClick, onDeleteClick }) => {
     setNewTitle(chapter.title);
   };
 
+  const chapterItemStyles = {
+    marginBottom: '10px',
+    cursor: 'pointer',
+    display: 'flex',
+    justifyContent: 'space-between', // Keep elements spaced between
+    alignItems: 'center',
+    padding: '10px',
+    backgroundColor: isSelected ? '#e0e0e0' : '#fff', // Highlight selected chapter
+    borderRadius: '4px',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+    transition: 'background-color 0.3s ease',
+  };
+
   return (
     <div
-      style={{
-        marginBottom: '10px',
-        cursor: 'pointer',
-        display: 'flex',
-        justifyContent: 'space-between', // Keep elements spaced between
-        alignItems: 'center',
-        padding: '10px',
-        backgroundColor: '#fff',
-        borderRadius: '4px',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-      }}
+      style={chapterItemStyles}
+      onClick={() => onChapterClick(chapter)} // Call the click handler
     >
       {isEditing ? (
         <EditChapter
