@@ -1,7 +1,6 @@
 // Editor/ChapterObj.js
 
 import React from 'react';
-import ChapterIO from './ChapterIO';
 import SubItemList from './SubItemList';
 
 const ChapterObj = ({
@@ -16,21 +15,16 @@ const ChapterObj = ({
   selectedSubItem,
   onAddSubItem,
 }) => {
-  const [isEditing, setIsEditing] = React.useState(false);
   const [newChapterTitle, setNewChapterTitle] = React.useState(chapter.chapter);
 
-  const handleSaveClick = () => {
-    onEditClick(chapter, newChapterTitle);
-    setIsEditing(false);
+  const handleTitleChange = (e) => {
+    setNewChapterTitle(e.target.value);
   };
 
-  const handleCancelClick = () => {
-    setIsEditing(false);
-    setNewChapterTitle(chapter.chapter);
-  };
-
-  const handleAddItemClick = () => {
-    onAddSubItem(chapter);
+  const handleTitleBlur = () => {
+    if (newChapterTitle !== chapter.chapter) {
+      onEditClick(chapter, newChapterTitle);
+    }
   };
 
   return (
@@ -57,47 +51,59 @@ const ChapterObj = ({
           cursor: 'pointer',
         }}
       >
-        {isEditing ? (
-          <ChapterIO
-            newChapterTitle={newChapterTitle}
-            onTitleChange={(e) => setNewChapterTitle(e.target.value)}
-            onSaveClick={handleSaveClick}
-            onCancelClick={handleCancelClick}
-            onAddItemClick={handleAddItemClick}
-          />
-        ) : (
-          <>
-            <h3 style={{ margin: 0 }}>{chapter.chapter}</h3>
-            <div style={{ marginLeft: 'auto' }}>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsEditing(true);
-                }}
-                style={{ marginLeft: '10px', color: 'blue', cursor: 'pointer' }}
-              >
-                Edit
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDeleteClick(chapter);
-                }}
-                style={{ marginLeft: '10px', color: 'red', cursor: 'pointer' }}
-              >
-                Delete
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleAddItemClick();
-                }}
-                style={{ marginLeft: '10px', color: 'blue', cursor: 'pointer' }}
-              >
-                Add Item
-              </button>
-            </div>
-          </>
+        <input
+          type="text"
+          value={newChapterTitle}
+          onChange={handleTitleChange}
+          onBlur={handleTitleBlur}
+          autoFocus
+          style={{
+            width: '100%',
+            padding: '8px',
+            fontSize: '16px',
+            borderRadius: '4px',
+            border: '1px solid #ccc',
+            marginBottom: '10px'
+          }}
+        />
+        {isSelected && (
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onAddSubItem(chapter);
+              }}
+              style={{
+                padding: '4px 8px',
+                fontSize: '12px',
+                color: 'blue',
+                cursor: 'pointer',
+                border: '1px solid #ccc',
+                borderRadius: '4px',
+                backgroundColor: '#f0f8ff',
+              }}
+            >
+              Add Item
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onDeleteClick(chapter);
+              }}
+              style={{
+                padding: '4px 8px',
+                fontSize: '12px',
+                color: 'red',
+                cursor: 'pointer',
+                border: '1px solid #ccc',
+                borderRadius: '4px',
+                backgroundColor: '#ffe0e0',
+                marginLeft: 'auto', // Move this button to the rightmost
+              }}
+            >
+              Delete Chapter
+            </button>
+          </div>
         )}
       </div>
 
@@ -109,7 +115,7 @@ const ChapterObj = ({
             onReorder={(fromIndex, toIndex) => onSubItemReorder(chapter, fromIndex, toIndex)}
             onDelete={(subItem) => onSubItemDelete(chapter, subItem)}
             onSubItemClick={(subItem) => onSubItemClick(subItem)}
-            selectedSubItem={selectedSubItem} // Pass selectedSubItem here
+            selectedSubItem={selectedSubItem}
           />
         </div>
       )}
