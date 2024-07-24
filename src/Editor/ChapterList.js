@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import ChapterItem from './ChapterItem';
+import ChapterObj from './ChapterObj';
 
 const ChapterList = ({ chapters, reorderChapters, onEditClick, onDeleteClick, onChapterClick, selectedChapter }) => {
   const handleDragEnd = (result) => {
@@ -31,7 +31,7 @@ const ChapterList = ({ chapters, reorderChapters, onEditClick, onDeleteClick, on
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
                   >
-                    <ChapterItem
+                    <ChapterObj
                       chapter={chapter}
                       onEditClick={onEditClick}
                       onDeleteClick={onDeleteClick}

@@ -1,8 +1,8 @@
-// Editor/EditChapter.js
+// Editor/ChapterIO.js
 
 import React from 'react';
 
-const EditChapter = ({ newTitle, onTitleChange, onSaveClick, onCancelClick }) => (
+const ChapterIO = ({ newTitle, onTitleChange, onSaveClick, onCancelClick }) => (
   <div
     style={{
       display: 'flex',
@@ -57,4 +57,4 @@ const EditChapter = ({ newTitle, onTitleChange, onSaveClick, onCancelClick }) =>
   </div>
 );
 
-export default EditChapter;
+export default ChapterIO;

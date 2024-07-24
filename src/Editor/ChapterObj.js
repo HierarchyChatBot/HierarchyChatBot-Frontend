@@ -1,9 +1,9 @@
-// Editor/ChapterItem.js
+// Editor/ChapterObj.js
 
 import React from 'react';
-import EditChapter from './EditChapter';
+import ChapterIO from './ChapterIO';
 
-const ChapterItem = ({ chapter, onEditClick, onDeleteClick, onChapterClick, isSelected }) => {
+const ChapterObj = ({ chapter, onEditClick, onDeleteClick, onChapterClick, isSelected }) => {
   const [isEditing, setIsEditing] = React.useState(false);
   const [newTitle, setNewTitle] = React.useState(chapter.title);
 
@@ -17,7 +17,7 @@ const ChapterItem = ({ chapter, onEditClick, onDeleteClick, onChapterClick, isSe
     setNewTitle(chapter.title);
   };
 
-  const chapterItemStyles = {
+  const ChapterObjStyles = {
     marginBottom: '10px',
     cursor: 'pointer',
     display: 'flex',
@@ -32,11 +32,11 @@ const ChapterItem = ({ chapter, onEditClick, onDeleteClick, onChapterClick, isSe
 
   return (
     <div
-      style={chapterItemStyles}
+      style={ChapterObjStyles}
       onClick={() => onChapterClick(chapter)} // Call the click handler
     >
       {isEditing ? (
-        <EditChapter
+        <ChapterIO
           newTitle={newTitle}
           onTitleChange={(e) => setNewTitle(e.target.value)}
           onSaveClick={handleSaveClick}
@@ -72,4 +72,4 @@ const ChapterItem = ({ chapter, onEditClick, onDeleteClick, onChapterClick, isSe
   );
 };
 
-export default ChapterItem;
+export default ChapterObj;
