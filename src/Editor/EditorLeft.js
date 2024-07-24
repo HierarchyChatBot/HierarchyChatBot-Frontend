@@ -13,12 +13,20 @@ const EditorLeft = () => {
     reorderChapters,
     setChapters,
     addChapter,
-    selectedChapter, // Add this to highlight the selected chapter
+    selectedChapter, // To highlight the selected chapter
+    selectedSubItem, // To highlight the selected subitem
+    setExpandedChapter,
+    expandedChapter // To manage expanded chapters
   } = useChapter();
 
   const handleChapterClick = (chapter) => {
     setSelectedChapter(chapter);
+    setExpandedChapter(chapter); // Expand the chapter
     setSelectedSubItem(null);
+  };
+
+  const handleSubItemClick = (subItem) => {
+    setSelectedSubItem(subItem);
   };
 
   const handleEditClick = (chapter, newChapterTitle) => {
@@ -71,8 +79,11 @@ const EditorLeft = () => {
         reorderChapters={reorderChapters}
         onEditClick={handleEditClick}
         onDeleteClick={removeChapter}
-        onChapterClick={handleChapterClick} // Pass the click handler
+        onChapterClick={handleChapterClick} // Pass the chapter click handler
+        onSubItemClick={handleSubItemClick} // Pass the subitem click handler
         selectedChapter={selectedChapter} // Pass the selected chapter for highlighting
+        selectedSubItem={selectedSubItem} // Pass the selected subitem for highlighting
+        expandedChapter={expandedChapter} // Pass the expanded chapter
       />
     </div>
   );

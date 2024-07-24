@@ -4,12 +4,19 @@ import React from 'react';
 import { useChapter } from '../JsonState';
 
 const ChatLeft = () => {
-  const { chapters, selectedChapter, setSelectedChapter, setSelectedSubItem, selectedSubItem } = useChapter();
-  const [expandedChapter, setExpandedChapter] = React.useState(null);
+  const {
+    chapters,
+    selectedChapter,
+    setSelectedChapter,
+    setSelectedSubItem,
+    selectedSubItem,
+    expandedChapter,
+    setExpandedChapter // Use setExpandedChapter from context
+  } = useChapter();
 
   const handleChapterClick = (chapter) => {
     setSelectedChapter(chapter);
-    setExpandedChapter(chapter);
+    setExpandedChapter(chapter); // Update expandedChapter state
     setSelectedSubItem(null);
   };
 

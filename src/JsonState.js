@@ -10,6 +10,7 @@ export const ChapterProvider = ({ children }) => {
   const [selectedSubItem, setSelectedSubItem] = useState(null);
   const [chapters, setChapters] = useState([]);
   const [chatHistory, setChatHistory] = useState([]);
+  const [expandedChapter, setExpandedChapter] = useState(null); // Added expandedChapter state
 
   const addMessage = (message) => {
     setChatHistory(prevHistory => [...prevHistory, message]);
@@ -59,6 +60,7 @@ export const ChapterProvider = ({ children }) => {
     setChapters([]);
     setSelectedChapter(null);
     setSelectedSubItem(null);
+    setExpandedChapter(null); // Reset expandedChapter
   };
 
   return (
@@ -77,7 +79,9 @@ export const ChapterProvider = ({ children }) => {
         removeChapter,
         reorderChapters,
         addChapter,
-        resetChapters, // Provide the reset function
+        resetChapters,
+        expandedChapter, // Provide expandedChapter
+        setExpandedChapter, // Provide setExpandedChapter
       }}
     >
       {children}
