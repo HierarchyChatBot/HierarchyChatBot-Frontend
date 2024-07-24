@@ -4,10 +4,11 @@ import React, { useState, useEffect } from 'react';
 import { useChapter } from '../JsonState';
 
 const EditorRight = () => {
-  const { selectedChapter, setChapters } = useChapter();
+  const { selectedChapter, selectedSubItem, setChapters, editSubItemDescription } = useChapter();
   
-  // Local state for the description
-  const [localDescription, setLocalDescription] = useState('');
+  // Local state for the chapter and subitem descriptions
+  const [localChapterDescription, setLocalChapterDescription] = useState('');
+  const [localSubItemDescription, setLocalSubItemDescription] = useState('');
 
   // Debounce function to delay updates
   const debounce = (func, delay) => {
@@ -18,14 +19,17 @@ const EditorRight = () => {
     };
   };
 
-  // Update the local description state whenever a new chapter is selected
+  // Update local states whenever a new chapter or subitem is selected
   useEffect(() => {
     if (selectedChapter) {
-      setLocalDescription(selectedChapter.description || '');
+      setLocalChapterDescription(selectedChapter.description || '');
     }
-  }, [selectedChapter]);
+    if (selectedSubItem) {
+      setLocalSubItemDescription(selectedSubItem.description || '');
+    }
+  }, [selectedChapter, selectedSubItem]);
 
-  // Function to update the chapters state with the new description
+  // Function to update the chapter description
   const updateChapterDescription = (newDescription) => {
     setChapters((prevChapters) =>
       prevChapters.map((chapter) =>
@@ -34,22 +38,43 @@ const EditorRight = () => {
     );
   };
 
-  // Debounced function for updating the chapter description
+  // Debounced function for updating chapter description
   const debouncedUpdateChapterDescription = debounce(updateChapterDescription, 300);
 
-  // Handle changes in the text area
-  const handleDescriptionChange = (e) => {
+  // Handle changes in the chapter description text area
+  const handleChapterDescriptionChange = (e) => {
     const newDescription = e.target.value;
-    setLocalDescription(newDescription);
+    setLocalChapterDescription(newDescription);
     debouncedUpdateChapterDescription(newDescription);
   };
 
-  // If there's no selected chapter, show a message
+  // Handle changes in the subitem description text area
+  const handleSubItemDescriptionChange = (e) => {
+    setLocalSubItemDescription(e.target.value);
+  };
+
+  // Save the updated subitem description
+  const saveSubItemDescription = () => {
+    if (selectedChapter && selectedSubItem) {
+      editSubItemDescription(selectedChapter, selectedSubItem, localSubItemDescription);
+    }
+  };
+
+  // If there's no selected chapter or subitem, show a message
   if (!selectedChapter) {
     return (
       <div style={{ padding: '10px', boxSizing: 'border-box' }}>
         <h1>Editor</h1>
         <p>Select a chapter to edit its description.</p>
+      </div>
+    );
+  }
+
+  if (!selectedSubItem) {
+    return (
+      <div style={{ padding: '10px', boxSizing: 'border-box' }}>
+        <h1>Editor</h1>
+        <p>Select a subitem to edit its description.</p>
       </div>
     );
   }
@@ -63,25 +88,48 @@ const EditorRight = () => {
     flexDirection: 'column',
   };
 
-  const textAreaStyles = {
-    width: '100%',
-    height: 'calc(100% - 60px)', // Adjusting for heading height
+  const sectionStyles = {
     padding: '10px',
-    fontSize: '16px',
+    boxSizing: 'border-box',
+    marginBottom: '10px',
     border: '1px solid #ccc',
     borderRadius: '4px',
     resize: 'none',
   };
 
+  const chapterStyles = {
+    ...sectionStyles,
+    height: '30%',
+  };
+
+  const subItemStyles = {
+    ...sectionStyles,
+    height: '60%',
+  };
+
   return (
     <div style={editorStyles}>
-      <h1>Editor</h1>
-      <textarea
-        style={textAreaStyles}
-        value={localDescription}
-        onChange={handleDescriptionChange}
-        placeholder="Edit chapter description here..."
-      />
+      <div style={chapterStyles}>
+        <h1 style={{ fontSize: '1em' }}>Chapter Description</h1>
+        <textarea
+          style={{ width: '100%', height: 'calc(100% - 2em)', padding: '10px', fontSize: '16px' }}
+          value={localChapterDescription}
+          onChange={handleChapterDescriptionChange}
+          placeholder="Edit chapter description here..."
+        />
+      </div>
+      <div style={subItemStyles}>
+        <h1 style={{ fontSize: '1em' }}>Subitem Description</h1>
+        <textarea
+          style={{ width: '100%', height: 'calc(100% - 2em)', padding: '10px', fontSize: '16px' }}
+          value={localSubItemDescription}
+          onChange={handleSubItemDescriptionChange}
+          placeholder="Edit subitem description here..."
+        />
+        <button onClick={saveSubItemDescription} style={{ marginTop: '10px' }}>
+          Save Subitem Description
+        </button>
+      </div>
     </div>
   );
 };

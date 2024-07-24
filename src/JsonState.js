@@ -72,7 +72,8 @@ export const ChapterProvider = ({ children }) => {
       )
     );
   };
-  const editSubItem = (chapter, subItemToEdit, newText) => {
+
+  const editSubItem = (chapter, subItemToEdit, newTitle) => {
     setChapters(prevChapters =>
       prevChapters.map(ch =>
         ch.id === chapter.id
@@ -80,7 +81,24 @@ export const ChapterProvider = ({ children }) => {
               ...ch,
               subItems: ch.subItems.map(subItem =>
                 subItem.item === subItemToEdit.item
-                  ? { ...subItem, item: newText }
+                  ? { ...subItem, item: newTitle }
+                  : subItem
+              )
+            }
+          : ch
+      )
+    );
+  };
+
+  const editSubItemDescription = (chapter, subItemToEdit, newDescription) => {
+    setChapters(prevChapters =>
+      prevChapters.map(ch =>
+        ch.id === chapter.id
+          ? {
+              ...ch,
+              subItems: ch.subItems.map(subItem =>
+                subItem.item === subItemToEdit.item
+                  ? { ...subItem, description: newDescription }
                   : subItem
               )
             }
@@ -110,6 +128,7 @@ export const ChapterProvider = ({ children }) => {
         expandedChapter, // Provide expandedChapter
         setExpandedChapter, // Provide setExpandedChapter
         editSubItem, // Add this
+        editSubItemDescription, // Add this
       }}
     >
       {children}
