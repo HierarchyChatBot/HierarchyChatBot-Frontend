@@ -10,35 +10,16 @@ const ChapterList = ({
   onEditClick,
   onDeleteClick,
   onChapterClick,
-  onSubItemClick, // Accept the subitem click handler
+  onSubItemReorder,
+  onSubItemDelete,
+  onSubItemClick,
   selectedChapter,
   selectedSubItem,
-  expandedChapter // Accept the expanded chapter
+  expandedChapter
 }) => {
   const handleDragEnd = (result) => {
     if (!result.destination) return; // If there's no destination, exit
     reorderChapters(result.source.index, result.destination.index);
-  };
-
-  const renderSubItems = (subItems) => {
-    return subItems.map((subItem) => (
-      <div key={subItem.item}>
-        <div
-          style={{
-            marginLeft: '20px',
-            cursor: 'pointer',
-            backgroundColor: selectedSubItem && subItem.item === selectedSubItem.item ? '#e0e0e0' : 'transparent',
-            borderRadius: '4px',
-            padding: '5px',
-            transition: 'background-color 0.3s ease',
-          }}
-          onClick={() => onSubItemClick(subItem)} // Use the subitem click handler
-        >
-          {subItem.item}
-        </div>
-        {subItem.subItems && renderSubItems(subItem.subItems)} {/* Recursively render nested subItems */}
-      </div>
-    ));
   };
 
   return (
@@ -52,7 +33,7 @@ const ChapterList = ({
           >
             {chapters.map((chapter, index) => (
               <Draggable
-                key={chapter.id} // Use a unique ID for each chapter
+                key={chapter.id}
                 draggableId={chapter.id}
                 index={index}
               >
@@ -66,10 +47,14 @@ const ChapterList = ({
                       chapter={chapter}
                       onEditClick={onEditClick}
                       onDeleteClick={onDeleteClick}
-                      onChapterClick={() => onChapterClick(chapter)} // Add the chapter click handler
-                      isSelected={selectedChapter && chapter.id === selectedChapter.id} // Highlight the selected chapter
+                      onChapterClick={onChapterClick}
+                      onSubItemReorder={onSubItemReorder}
+                      onSubItemDelete={onSubItemDelete}
+                      onSubItemClick={onSubItemClick}
+                      selectedSubItem={selectedSubItem}
+                      isSelected={selectedChapter && chapter.id === selectedChapter.id}
+                      expandedChapter={expandedChapter}
                     />
-                    {expandedChapter === chapter && chapter.subItems && renderSubItems(chapter.subItems)} {/* Render subItems if the chapter is expanded */}
                   </div>
                 )}
               </Draggable>

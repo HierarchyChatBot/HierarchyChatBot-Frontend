@@ -2,8 +2,19 @@
 
 import React from 'react';
 import ChapterIO from './ChapterIO';
+import SubItemList from './SubItemList';
 
-const ChapterObj = ({ chapter, onEditClick, onDeleteClick, onChapterClick, isSelected }) => {
+const ChapterObj = ({
+  chapter,
+  onEditClick,
+  onDeleteClick,
+  onChapterClick,
+  isSelected,
+  onSubItemReorder,
+  onSubItemDelete,
+  onSubItemClick,
+  selectedSubItem
+}) => {
   const [isEditing, setIsEditing] = React.useState(false);
   const [newChapterTitle, setNewChapterTitle] = React.useState(chapter.chapter);
 
@@ -17,23 +28,20 @@ const ChapterObj = ({ chapter, onEditClick, onDeleteClick, onChapterClick, isSel
     setNewChapterTitle(chapter.chapter);
   };
 
-  const ChapterObjStyles = {
-    marginBottom: '10px',
-    cursor: 'pointer',
-    display: 'flex',
-    justifyContent: 'space-between', // Keep elements spaced between
-    alignItems: 'center',
-    padding: '10px',
-    backgroundColor: isSelected ? '#e0e0e0' : '#fff', // Highlight selected chapter
-    borderRadius: '4px',
-    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-    transition: 'background-color 0.3s ease',
-  };
-
   return (
     <div
-      style={ChapterObjStyles}
-      onClick={() => onChapterClick(chapter)} // Call the click handler
+      style={{
+        marginBottom: '10px',
+        cursor: 'pointer',
+        display: 'flex',
+        flexDirection: 'column',
+        backgroundColor: isSelected ? '#e0e0e0' : '#fff',
+        borderRadius: '4px',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+        padding: '10px',
+        transition: 'background-color 0.3s ease',
+      }}
+      onClick={() => onChapterClick(chapter)}
     >
       {isEditing ? (
         <ChapterIO
@@ -46,7 +54,6 @@ const ChapterObj = ({ chapter, onEditClick, onDeleteClick, onChapterClick, isSel
         <>
           <h3 style={{ margin: 0 }}>{chapter.chapter}</h3>
           <div style={{ marginLeft: 'auto' }}>
-            {/* This new container will push the buttons to the right */}
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -58,17 +65,23 @@ const ChapterObj = ({ chapter, onEditClick, onDeleteClick, onChapterClick, isSel
             </button>
             <button
               onClick={(e) => {
-                e.stopPropagation(); // Stop click event from affecting parent div
+                e.stopPropagation();
                 onDeleteClick(chapter);
               }}
               style={{ marginLeft: '10px', color: 'red', cursor: 'pointer' }}
             >
               Delete
             </button>
-
           </div>
         </>
       )}
+      <SubItemList
+        subItems={chapter.subItems}
+        onReorder={(fromIndex, toIndex) => onSubItemReorder(chapter, fromIndex, toIndex)}
+        onDelete={(subItem) => onSubItemDelete(chapter, subItem)}
+        onSubItemClick={(subItem) => onSubItemClick(subItem)}
+        selectedSubItem={selectedSubItem} // Pass selectedSubItem here
+      />
     </div>
   );
 };

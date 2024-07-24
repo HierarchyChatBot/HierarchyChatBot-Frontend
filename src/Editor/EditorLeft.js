@@ -13,15 +13,15 @@ const EditorLeft = () => {
     reorderChapters,
     setChapters,
     addChapter,
-    selectedChapter, // To highlight the selected chapter
-    selectedSubItem, // To highlight the selected subitem
+    selectedChapter,
+    selectedSubItem,
     setExpandedChapter,
-    expandedChapter // To manage expanded chapters
+    expandedChapter,
   } = useChapter();
 
   const handleChapterClick = (chapter) => {
     setSelectedChapter(chapter);
-    setExpandedChapter(chapter); // Expand the chapter
+    setExpandedChapter(chapter);
     setSelectedSubItem(null);
   };
 
@@ -44,6 +44,30 @@ const EditorLeft = () => {
       subItems: [],
     };
     addChapter(newChapter);
+  };
+
+  const handleSubItemReorder = (chapter, fromIndex, toIndex) => {
+    const updatedChapters = chapters.map((ch) => {
+      if (ch.id === chapter.id) {
+        const updatedSubItems = Array.from(ch.subItems);
+        const [movedSubItem] = updatedSubItems.splice(fromIndex, 1);
+        updatedSubItems.splice(toIndex, 0, movedSubItem);
+        return { ...ch, subItems: updatedSubItems };
+      }
+      return ch;
+    });
+    setChapters(updatedChapters);
+  };
+
+  const handleSubItemDelete = (chapter, subItemToDelete) => {
+    const updatedChapters = chapters.map((ch) => {
+      if (ch.id === chapter.id) {
+        const updatedSubItems = ch.subItems.filter((subItem) => subItem.item !== subItemToDelete.item);
+        return { ...ch, subItems: updatedSubItems };
+      }
+      return ch;
+    });
+    setChapters(updatedChapters);
   };
 
   return (
@@ -79,11 +103,13 @@ const EditorLeft = () => {
         reorderChapters={reorderChapters}
         onEditClick={handleEditClick}
         onDeleteClick={removeChapter}
-        onChapterClick={handleChapterClick} // Pass the chapter click handler
-        onSubItemClick={handleSubItemClick} // Pass the subitem click handler
-        selectedChapter={selectedChapter} // Pass the selected chapter for highlighting
-        selectedSubItem={selectedSubItem} // Pass the selected subitem for highlighting
-        expandedChapter={expandedChapter} // Pass the expanded chapter
+        onChapterClick={handleChapterClick}
+        onSubItemReorder={handleSubItemReorder}
+        onSubItemDelete={handleSubItemDelete}
+        onSubItemClick={handleSubItemClick}
+        selectedChapter={selectedChapter}
+        selectedSubItem={selectedSubItem}
+        expandedChapter={expandedChapter}
       />
     </div>
   );
