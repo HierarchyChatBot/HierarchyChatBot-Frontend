@@ -49,21 +49,23 @@ const EditorLeft = () => {
       }}
       className="column left-column"
     >
-      <h2>Chapters</h2>
-      <button
-        onClick={handleAddChapter}
-        style={{
-          marginBottom: '10px',
-          padding: '10px',
-          border: 'none',
-          borderRadius: '4px',
-          backgroundColor: '#007bff',
-          color: '#fff',
-          cursor: 'pointer',
-        }}
-      >
-        Add Chapter
-      </button>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <span style={{ fontSize: '2em', fontWeight: 'bold', marginBottom: '1em' }}>Chapters</span>
+        <button
+          onClick={handleAddChapter}
+          style={{
+            marginBottom: '10px',
+            padding: '10px',
+            border: 'none',
+            borderRadius: '4px',
+            backgroundColor: '#007bff',
+            color: '#fff',
+            cursor: 'pointer',
+          }}
+        >
+          Add Chapter
+        </button>
+      </div>
       <ChapterList
         chapters={chapters}
         reorderChapters={reorderChapters}

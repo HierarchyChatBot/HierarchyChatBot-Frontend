@@ -5,12 +5,13 @@ import { Link } from 'react-router-dom';
 import { useChapter } from './JsonState';
 
 const Body = () => {
-  const { loadChaptersFromFile, saveChaptersToFile } = useChapter();
+  const { loadChaptersFromFile, saveChaptersToFile, resetChapters } = useChapter();
   const fileInputRef = useRef(null);
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
+      resetChapters(); // Clear the existing state before loading new data
       loadChaptersFromFile(file);
     }
   };
@@ -21,6 +22,12 @@ const Body = () => {
 
   const handleSaveClick = () => {
     saveChaptersToFile('chapters.json');
+  };
+
+  const handleNewClick = () => {
+    if (window.confirm('Are you sure you want to clear all chapters?')) {
+      resetChapters();
+    }
   };
 
   return (
@@ -41,6 +48,7 @@ const Body = () => {
         />
         <button onClick={handleButtonClick} style={{ marginLeft: '10px' }}>Load</button>
         <button onClick={handleSaveClick} style={{ marginLeft: '10px' }}>Save</button>
+        <button onClick={handleNewClick} style={{ marginLeft: '10px' }}>New</button>
       </nav>
     </div>
   );

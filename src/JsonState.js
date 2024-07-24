@@ -55,6 +55,12 @@ export const ChapterProvider = ({ children }) => {
     setChapters(prevChapters => [...prevChapters, { ...newChapter, id: uuidv4() }]);
   };
 
+  const resetChapters = () => {
+    setChapters([]);
+    setSelectedChapter(null);
+    setSelectedSubItem(null);
+  };
+
   return (
     <JsonState.Provider
       value={{
@@ -71,6 +77,7 @@ export const ChapterProvider = ({ children }) => {
         removeChapter,
         reorderChapters,
         addChapter,
+        resetChapters, // Provide the reset function
       }}
     >
       {children}

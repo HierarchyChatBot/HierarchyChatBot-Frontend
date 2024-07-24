@@ -49,15 +49,6 @@ const ChapterObj = ({ chapter, onEditClick, onDeleteClick, onChapterClick, isSel
             {/* This new container will push the buttons to the right */}
             <button
               onClick={(e) => {
-                e.stopPropagation(); // Stop click event from affecting parent div
-                onDeleteClick(chapter);
-              }}
-              style={{ marginLeft: '10px', color: 'red', cursor: 'pointer' }}
-            >
-              -
-            </button>
-            <button
-              onClick={(e) => {
                 e.stopPropagation();
                 setIsEditing(true);
               }}
@@ -65,6 +56,16 @@ const ChapterObj = ({ chapter, onEditClick, onDeleteClick, onChapterClick, isSel
             >
               Edit
             </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation(); // Stop click event from affecting parent div
+                onDeleteClick(chapter);
+              }}
+              style={{ marginLeft: '10px', color: 'red', cursor: 'pointer' }}
+            >
+              Delete
+            </button>
+
           </div>
         </>
       )}
