@@ -63,6 +63,16 @@ export const ChapterProvider = ({ children }) => {
     setExpandedChapter(null); // Reset expandedChapter
   };
 
+  const addSubItem = (chapter, newSubItem) => {
+    setChapters(prevChapters => 
+      prevChapters.map(ch =>
+        ch.id === chapter.id
+          ? { ...ch, subItems: [...ch.subItems, newSubItem] }
+          : ch
+      )
+    );
+  };
+
   return (
     <JsonState.Provider
       value={{
@@ -80,6 +90,7 @@ export const ChapterProvider = ({ children }) => {
         reorderChapters,
         addChapter,
         resetChapters,
+        addSubItem, // Provide addSubItem
         expandedChapter, // Provide expandedChapter
         setExpandedChapter, // Provide setExpandedChapter
       }}

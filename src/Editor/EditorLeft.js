@@ -1,8 +1,9 @@
-// Editor/EditorLeft.js
+// EditorLeft.js
 
 import React from 'react';
 import { useChapter } from '../JsonState';
 import ChapterList from './ChapterList';
+import { v4 as uuidv4 } from 'uuid'; // Import uuidv4
 
 const EditorLeft = () => {
   const {
@@ -17,6 +18,7 @@ const EditorLeft = () => {
     selectedSubItem,
     setExpandedChapter,
     expandedChapter,
+    addSubItem
   } = useChapter();
 
   const handleChapterClick = (chapter) => {
@@ -70,6 +72,11 @@ const EditorLeft = () => {
     setChapters(updatedChapters);
   };
 
+  const handleAddSubItem = (chapter) => {
+    const newSubItem = { item: `New SubItem ${uuidv4()}` }; // Use uuidv4 here
+    addSubItem(chapter, newSubItem);
+  };
+
   return (
     <div
       style={{
@@ -107,6 +114,7 @@ const EditorLeft = () => {
         onSubItemReorder={handleSubItemReorder}
         onSubItemDelete={handleSubItemDelete}
         onSubItemClick={handleSubItemClick}
+        onAddSubItem={handleAddSubItem} // Ensure this is included
         selectedChapter={selectedChapter}
         selectedSubItem={selectedSubItem}
         expandedChapter={expandedChapter}

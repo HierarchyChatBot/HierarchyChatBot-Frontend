@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-const ChapterIO = ({ newChapterTitle, onTitleChange, onSaveClick, onCancelClick }) => (
+const ChapterIO = ({ newChapterTitle, onTitleChange, onSaveClick, onCancelClick, onAddItemClick }) => (
   <div
     style={{
       display: 'flex',
@@ -52,6 +52,20 @@ const ChapterIO = ({ newChapterTitle, onTitleChange, onSaveClick, onCancelClick 
         }}
       >
         Cancel
+      </button>
+      <button
+        onClick={onAddItemClick}
+        style={{
+          marginLeft: '10px',
+          color: 'blue',
+          cursor: 'pointer',
+          padding: '8px 12px',
+          border: 'none',
+          borderRadius: '4px',
+          backgroundColor: '#e0e0ff',
+        }}
+      >
+        Add Item
       </button>
     </div>
   </div>

@@ -13,6 +13,7 @@ const ChapterList = ({
   onSubItemReorder,
   onSubItemDelete,
   onSubItemClick,
+  onAddSubItem, // Include this
   selectedChapter,
   selectedSubItem,
   expandedChapter
@@ -51,6 +52,7 @@ const ChapterList = ({
                       onSubItemReorder={onSubItemReorder}
                       onSubItemDelete={onSubItemDelete}
                       onSubItemClick={onSubItemClick}
+                      onAddSubItem={onAddSubItem} // Ensure this is passed down
                       selectedSubItem={selectedSubItem}
                       isSelected={selectedChapter && chapter.id === selectedChapter.id}
                       expandedChapter={expandedChapter}

@@ -13,7 +13,8 @@ const ChapterObj = ({
   onSubItemReorder,
   onSubItemDelete,
   onSubItemClick,
-  selectedSubItem
+  selectedSubItem,
+  onAddSubItem,
 }) => {
   const [isEditing, setIsEditing] = React.useState(false);
   const [newChapterTitle, setNewChapterTitle] = React.useState(chapter.chapter);
@@ -26,6 +27,10 @@ const ChapterObj = ({
   const handleCancelClick = () => {
     setIsEditing(false);
     setNewChapterTitle(chapter.chapter);
+  };
+
+  const handleAddItemClick = () => {
+    onAddSubItem(chapter);
   };
 
   return (
@@ -58,6 +63,7 @@ const ChapterObj = ({
             onTitleChange={(e) => setNewChapterTitle(e.target.value)}
             onSaveClick={handleSaveClick}
             onCancelClick={handleCancelClick}
+            onAddItemClick={handleAddItemClick}
           />
         ) : (
           <>
@@ -80,6 +86,15 @@ const ChapterObj = ({
                 style={{ marginLeft: '10px', color: 'red', cursor: 'pointer' }}
               >
                 Delete
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleAddItemClick();
+                }}
+                style={{ marginLeft: '10px', color: 'blue', cursor: 'pointer' }}
+              >
+                Add Item
               </button>
             </div>
           </>
