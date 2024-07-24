@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-const ChapterIO = ({ newTitle, onTitleChange, onSaveClick, onCancelClick }) => (
+const ChapterIO = ({ newChapterTitle, onTitleChange, onSaveClick, onCancelClick }) => (
   <div
     style={{
       display: 'flex',
@@ -13,7 +13,7 @@ const ChapterIO = ({ newTitle, onTitleChange, onSaveClick, onCancelClick }) => (
   >
     <input
       type="text"
-      value={newTitle}
+      value={newChapterTitle}
       onChange={onTitleChange}
       style={{
         flexGrow: 1,

@@ -4,7 +4,7 @@ import React from 'react';
 import { useChapter } from '../JsonState';
 
 const ChatLeft = () => {
-  const { chapters, selectedChapter, setSelectedChapter, setSelectedSubItem } = useChapter();
+  const { chapters, selectedChapter, setSelectedChapter, setSelectedSubItem, selectedSubItem } = useChapter();
   const [expandedChapter, setExpandedChapter] = React.useState(null);
 
   const handleChapterClick = (chapter) => {
@@ -15,6 +15,27 @@ const ChatLeft = () => {
 
   const handleSubItemClick = (subItem) => {
     setSelectedSubItem(subItem);
+  };
+
+  const renderSubItems = (subItems) => {
+    return subItems.map((subItem) => (
+      <div key={subItem.item}> {/* Use the subItem.item as a unique key */}
+        <div
+          style={{
+            marginLeft: '20px',
+            cursor: 'pointer',
+            backgroundColor: selectedSubItem && subItem.item === selectedSubItem.item ? '#e0e0e0' : 'transparent',
+            borderRadius: '4px',
+            padding: '5px',
+            transition: 'background-color 0.3s ease',
+          }}
+          onClick={() => handleSubItemClick(subItem)}
+        >
+          {subItem.item}
+        </div>
+        {subItem.subItems && renderSubItems(subItem.subItems)}
+      </div>
+    ));
   };
 
   const columnStyles = {
@@ -30,47 +51,26 @@ const ChatLeft = () => {
     flexDirection: 'column',
   };
 
-  const chapterStyles = (chapter) => ({
-    marginBottom: '10px',
-    cursor: 'pointer',
-    backgroundColor: selectedChapter && chapter.id === selectedChapter.id ? '#e0e0e0' : 'transparent',
-    borderRadius: '4px',
-    padding: '10px',
-    transition: 'background-color 0.3s ease',
-  });
-
-  const subItemStyles = {
-    marginLeft: '20px',
-    cursor: 'pointer',
-  };
-
   return (
     <div style={columnStyles} className="column left-column">
       <h2>Chapters</h2>
       <div style={chaptersListStyles} className="chapters-list">
-        {chapters.map((chapter, index) => (
-          <div key={chapter.id}> {/* Use chapter.id as the key */}
+        {chapters.map((chapter) => (
+          <div key={chapter.id}>
             <div
-              style={chapterStyles(chapter)}
-              className="chapter"
+              style={{
+                marginBottom: '10px',
+                cursor: 'pointer',
+                backgroundColor: selectedChapter && chapter.id === selectedChapter.id ? '#e0e0e0' : 'transparent',
+                borderRadius: '4px',
+                padding: '10px',
+                transition: 'background-color 0.3s ease',
+              }}
               onClick={() => handleChapterClick(chapter)}
             >
-              <h3>{chapter.title}</h3>
+              <h3>{chapter.chapter}</h3> {/* Use chapter.chapter instead of chapter.title */}
             </div>
-            {expandedChapter === chapter && chapter.subItems && (
-              <div>
-                {chapter.subItems.map((subItem, subIndex) => (
-                  <div
-                    key={subIndex}
-                    style={subItemStyles}
-                    className="sub-item"
-                    onClick={() => handleSubItemClick(subItem)}
-                  >
-                    {subItem.title}
-                  </div>
-                ))}
-              </div>
-            )}
+            {expandedChapter === chapter && chapter.subItems && renderSubItems(chapter.subItems)}
           </div>
         ))}
       </div>

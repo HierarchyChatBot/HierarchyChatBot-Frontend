@@ -1,7 +1,7 @@
 // JsonState.js
 
 import React, { createContext, useState, useContext } from 'react';
-import { v4 as uuidv4 } from 'uuid';  // Import the UUID function
+import { v4 as uuidv4 } from 'uuid';
 
 const JsonState = createContext();
 
@@ -20,7 +20,7 @@ export const ChapterProvider = ({ children }) => {
     reader.onload = (e) => {
       try {
         const data = JSON.parse(e.target.result);
-        setChapters(data.map(chapter => ({ ...chapter, id: uuidv4() }))); // Assign a unique ID to each loaded chapter
+        setChapters(data.map(chapter => ({ ...chapter, id: uuidv4() })));
       } catch (error) {
         console.error('Error parsing JSON:', error);
       }
@@ -51,9 +51,8 @@ export const ChapterProvider = ({ children }) => {
     });
   };
 
-  // Function to handle adding a new chapter
   const addChapter = (newChapter) => {
-    setChapters(prevChapters => [...prevChapters, { ...newChapter, id: uuidv4() }]); // Assign a unique ID
+    setChapters(prevChapters => [...prevChapters, { ...newChapter, id: uuidv4() }]);
   };
 
   return (
@@ -71,7 +70,7 @@ export const ChapterProvider = ({ children }) => {
         saveChaptersToFile,
         removeChapter,
         reorderChapters,
-        addChapter, // Add this to context
+        addChapter,
       }}
     >
       {children}

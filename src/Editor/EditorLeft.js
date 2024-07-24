@@ -21,17 +21,17 @@ const EditorLeft = () => {
     setSelectedSubItem(null);
   };
 
-  const handleEditClick = (chapter, newTitle) => {
+  const handleEditClick = (chapter, newChapterTitle) => {
     setChapters((prevChapters) =>
       prevChapters.map((ch) =>
-        ch.id === chapter.id ? { ...ch, title: newTitle } : ch
+        ch.id === chapter.id ? { ...ch, chapter: newChapterTitle } : ch
       )
     );
   };
 
   const handleAddChapter = () => {
     const newChapter = {
-      title: 'New Chapter',
+      chapter: 'New Chapter',
       description: '',
       subItems: [],
     };

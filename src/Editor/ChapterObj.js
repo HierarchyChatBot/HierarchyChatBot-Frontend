@@ -5,16 +5,16 @@ import ChapterIO from './ChapterIO';
 
 const ChapterObj = ({ chapter, onEditClick, onDeleteClick, onChapterClick, isSelected }) => {
   const [isEditing, setIsEditing] = React.useState(false);
-  const [newTitle, setNewTitle] = React.useState(chapter.title);
+  const [newChapterTitle, setNewChapterTitle] = React.useState(chapter.chapter);
 
   const handleSaveClick = () => {
-    onEditClick(chapter, newTitle);
+    onEditClick(chapter, newChapterTitle);
     setIsEditing(false);
   };
 
   const handleCancelClick = () => {
     setIsEditing(false);
-    setNewTitle(chapter.title);
+    setNewChapterTitle(chapter.chapter);
   };
 
   const ChapterObjStyles = {
@@ -37,14 +37,14 @@ const ChapterObj = ({ chapter, onEditClick, onDeleteClick, onChapterClick, isSel
     >
       {isEditing ? (
         <ChapterIO
-          newTitle={newTitle}
-          onTitleChange={(e) => setNewTitle(e.target.value)}
+          newChapterTitle={newChapterTitle}
+          onTitleChange={(e) => setNewChapterTitle(e.target.value)}
           onSaveClick={handleSaveClick}
           onCancelClick={handleCancelClick}
         />
       ) : (
         <>
-          <h3 style={{ margin: 0 }}>{chapter.title}</h3>
+          <h3 style={{ margin: 0 }}>{chapter.chapter}</h3>
           <div style={{ marginLeft: 'auto' }}>
             {/* This new container will push the buttons to the right */}
             <button
