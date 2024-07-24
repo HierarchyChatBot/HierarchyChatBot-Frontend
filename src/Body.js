@@ -26,9 +26,11 @@ const Body = () => {
 
   const handleNewClick = () => {
     if (window.confirm('Are you sure you want to clear all chapters?')) {
-      resetChapters();
+      //resetChapters();
+      window.location.reload(); // Refresh the page
     }
   };
+  
 
   return (
     <div>
