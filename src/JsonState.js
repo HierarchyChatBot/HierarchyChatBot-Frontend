@@ -72,6 +72,22 @@ export const ChapterProvider = ({ children }) => {
       )
     );
   };
+  const editSubItem = (chapter, subItemToEdit, newText) => {
+    setChapters(prevChapters =>
+      prevChapters.map(ch =>
+        ch.id === chapter.id
+          ? {
+              ...ch,
+              subItems: ch.subItems.map(subItem =>
+                subItem.item === subItemToEdit.item
+                  ? { ...subItem, item: newText }
+                  : subItem
+              )
+            }
+          : ch
+      )
+    );
+  };
 
   return (
     <JsonState.Provider
@@ -93,6 +109,7 @@ export const ChapterProvider = ({ children }) => {
         addSubItem, // Provide addSubItem
         expandedChapter, // Provide expandedChapter
         setExpandedChapter, // Provide setExpandedChapter
+        editSubItem, // Add this
       }}
     >
       {children}

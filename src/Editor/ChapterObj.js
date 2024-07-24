@@ -14,6 +14,7 @@ const ChapterObj = ({
   onSubItemClick,
   selectedSubItem,
   onAddSubItem,
+  onEditSubItem, // Add this prop
 }) => {
   const [newChapterTitle, setNewChapterTitle] = React.useState(chapter.chapter);
 
@@ -116,6 +117,7 @@ const ChapterObj = ({
             onDelete={(subItem) => onSubItemDelete(chapter, subItem)}
             onSubItemClick={(subItem) => onSubItemClick(subItem)}
             selectedSubItem={selectedSubItem}
+            onEdit={(subItem, newText) => onEditSubItem(chapter, subItem, newText)} // Add this line
           />
         </div>
       )}

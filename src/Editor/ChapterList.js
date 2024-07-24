@@ -16,13 +16,14 @@ const ChapterList = ({
   onAddSubItem, // Include this
   selectedChapter,
   selectedSubItem,
-  expandedChapter
+  expandedChapter,
+  onEditSubItem, // Add this prop
 }) => {
   const handleDragEnd = (result) => {
     if (!result.destination) return; // If there's no destination, exit
     reorderChapters(result.source.index, result.destination.index);
   };
-
+  
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
       <Droppable droppableId="chaptersList">
@@ -52,7 +53,8 @@ const ChapterList = ({
                       onSubItemReorder={onSubItemReorder}
                       onSubItemDelete={onSubItemDelete}
                       onSubItemClick={onSubItemClick}
-                      onAddSubItem={onAddSubItem} // Ensure this is passed down
+                      onAddSubItem={onAddSubItem}
+                      onEditSubItem={onEditSubItem} // Add this line
                       selectedSubItem={selectedSubItem}
                       isSelected={selectedChapter && chapter.id === selectedChapter.id}
                       expandedChapter={expandedChapter}

@@ -3,7 +3,7 @@
 import React from 'react';
 import { useChapter } from '../JsonState';
 import ChapterList from './ChapterList';
-import { v4 as uuidv4 } from 'uuid'; // Import uuidv4
+import { v4 as uuidv4 } from 'uuid';
 
 const EditorLeft = () => {
   const {
@@ -18,7 +18,8 @@ const EditorLeft = () => {
     selectedSubItem,
     setExpandedChapter,
     expandedChapter,
-    addSubItem
+    addSubItem,
+    editSubItem, // Add this
   } = useChapter();
 
   const handleChapterClick = (chapter) => {
@@ -76,6 +77,9 @@ const EditorLeft = () => {
     const newSubItem = { item: `New SubItem ${uuidv4()}` }; // Use uuidv4 here
     addSubItem(chapter, newSubItem);
   };
+  const handleEditSubItem = (chapter, subItem, newText) => {
+    editSubItem(chapter, subItem, newText);
+  };
 
   return (
     <div
@@ -114,7 +118,8 @@ const EditorLeft = () => {
         onSubItemReorder={handleSubItemReorder}
         onSubItemDelete={handleSubItemDelete}
         onSubItemClick={handleSubItemClick}
-        onAddSubItem={handleAddSubItem} // Ensure this is included
+        onAddSubItem={handleAddSubItem}
+        onEditSubItem={handleEditSubItem} // Add this line
         selectedChapter={selectedChapter}
         selectedSubItem={selectedSubItem}
         expandedChapter={expandedChapter}
