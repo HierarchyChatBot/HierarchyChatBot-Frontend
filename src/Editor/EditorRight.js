@@ -48,16 +48,21 @@ const EditorRight = () => {
     debouncedUpdateChapterDescription(newDescription);
   };
 
-  // Handle changes in the subitem description text area
-  const handleSubItemDescriptionChange = (e) => {
-    setLocalSubItemDescription(e.target.value);
+  // Function to update the subitem description
+  const updateSubItemDescription = (newDescription) => {
+    if (selectedChapter && selectedSubItem) {
+      editSubItemDescription(selectedChapter, selectedSubItem, newDescription);
+    }
   };
 
-  // Save the updated subitem description
-  const saveSubItemDescription = () => {
-    if (selectedChapter && selectedSubItem) {
-      editSubItemDescription(selectedChapter, selectedSubItem, localSubItemDescription);
-    }
+  // Debounced function for updating subitem description
+  const debouncedUpdateSubItemDescription = debounce(updateSubItemDescription, 300);
+
+  // Handle changes in the subitem description text area
+  const handleSubItemDescriptionChange = (e) => {
+    const newDescription = e.target.value;
+    setLocalSubItemDescription(newDescription);
+    debouncedUpdateSubItemDescription(newDescription);
   };
 
   // If there's no selected chapter or subitem, show a message
@@ -126,9 +131,6 @@ const EditorRight = () => {
           onChange={handleSubItemDescriptionChange}
           placeholder="Edit subitem description here..."
         />
-        <button onClick={saveSubItemDescription} style={{ marginTop: '10px' }}>
-          Save Subitem Description
-        </button>
       </div>
     </div>
   );
