@@ -23,9 +23,14 @@ const EditorRight = () => {
   useEffect(() => {
     if (selectedChapter) {
       setLocalChapterDescription(selectedChapter.description || '');
+    } else {
+      setLocalChapterDescription(''); // Reset if no chapter is selected
     }
+
     if (selectedSubItem) {
       setLocalSubItemDescription(selectedSubItem.description || '');
+    } else {
+      setLocalSubItemDescription(''); // Reset if no subitem is selected
     }
   }, [selectedChapter, selectedSubItem]);
 
@@ -45,7 +50,11 @@ const EditorRight = () => {
   const handleChapterDescriptionChange = (e) => {
     const newDescription = e.target.value;
     setLocalChapterDescription(newDescription);
-    debouncedUpdateChapterDescription(newDescription);
+
+    // Update the chapter description only if a chapter is selected
+    if (selectedChapter) {
+      debouncedUpdateChapterDescription(newDescription);
+    }
   };
 
   // Function to update the subitem description
@@ -62,27 +71,12 @@ const EditorRight = () => {
   const handleSubItemDescriptionChange = (e) => {
     const newDescription = e.target.value;
     setLocalSubItemDescription(newDescription);
-    debouncedUpdateSubItemDescription(newDescription);
+
+    // Update the subitem description only if a subitem is selected
+    if (selectedSubItem) {
+      debouncedUpdateSubItemDescription(newDescription);
+    }
   };
-
-  // If there's no selected chapter or subitem, show a message
-  if (!selectedChapter) {
-    return (
-      <div style={{ padding: '10px', boxSizing: 'border-box' }}>
-        <h1>Editor</h1>
-        <p>Select a chapter to edit its description.</p>
-      </div>
-    );
-  }
-
-  if (!selectedSubItem) {
-    return (
-      <div style={{ padding: '10px', boxSizing: 'border-box' }}>
-        <h1>Editor</h1>
-        <p>Select a subitem to edit its description.</p>
-      </div>
-    );
-  }
 
   // Editor styles
   const editorStyles = {
@@ -120,7 +114,7 @@ const EditorRight = () => {
           style={{ width: '100%', height: 'calc(100% - 2em)', padding: '10px', fontSize: '16px' }}
           value={localChapterDescription}
           onChange={handleChapterDescriptionChange}
-          placeholder="Edit chapter description here..."
+          placeholder="Select a chapter to edit its description..."
         />
       </div>
       <div style={subItemStyles}>
@@ -129,7 +123,7 @@ const EditorRight = () => {
           style={{ width: '100%', height: 'calc(100% - 2em)', padding: '10px', fontSize: '16px' }}
           value={localSubItemDescription}
           onChange={handleSubItemDescriptionChange}
-          placeholder="Edit subitem description here..."
+          placeholder="Select a subitem to edit its description..."
         />
       </div>
     </div>
