@@ -4,8 +4,13 @@ import React, { useState, useEffect } from 'react';
 import { useChapter } from '../JsonState';
 
 const EditorRight = () => {
-  const { selectedChapter, selectedSubItem, setChapters, editSubItemDescription } = useChapter();
-  
+  const {
+    selectedChapter,
+    selectedSubItem,
+    setChapters,
+    editSubItemDescription,
+  } = useChapter();
+
   // Local state for the chapter and subitem descriptions
   const [localChapterDescription, setLocalChapterDescription] = useState('');
   const [localSubItemDescription, setLocalSubItemDescription] = useState('');
@@ -85,6 +90,7 @@ const EditorRight = () => {
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
+    gap: '20px', // Add some gap between the sections
   };
 
   const sectionStyles = {
@@ -94,6 +100,8 @@ const EditorRight = () => {
     border: '1px solid #ccc',
     borderRadius: '4px',
     resize: 'none',
+    backgroundColor: '#fff',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', // Add a subtle shadow
   };
 
   const chapterStyles = {
@@ -106,24 +114,34 @@ const EditorRight = () => {
     height: '60%',
   };
 
+  const titleStyle = {
+    fontSize: '1.2em',
+    fontWeight: 'bold',
+    marginBottom: '10px',
+  };
+
   return (
     <div style={editorStyles}>
       <div style={chapterStyles}>
-        <h1 style={{ fontSize: '1em' }}>Chapter Description</h1>
+        <h1 style={titleStyle}>
+          Chapter {selectedChapter ? `(${selectedChapter.chapter})` : ''} Description:
+        </h1>
         <textarea
           style={{ width: '100%', height: 'calc(100% - 2em)', padding: '10px', fontSize: '16px' }}
           value={localChapterDescription}
           onChange={handleChapterDescriptionChange}
-          placeholder="Select a chapter to edit its description..."
+          placeholder="Edit chapter description here..."
         />
       </div>
       <div style={subItemStyles}>
-        <h1 style={{ fontSize: '1em' }}>Subitem Description</h1>
+        <h1 style={titleStyle}>
+          Subitem {selectedSubItem ? `(${selectedSubItem.item})` : ''} Description:
+        </h1>
         <textarea
           style={{ width: '100%', height: 'calc(100% - 2em)', padding: '10px', fontSize: '16px' }}
           value={localSubItemDescription}
           onChange={handleSubItemDescriptionChange}
-          placeholder="Select a subitem to edit its description..."
+          placeholder="Edit subitem description here..."
         />
       </div>
     </div>
