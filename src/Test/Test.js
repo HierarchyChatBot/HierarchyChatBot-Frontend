@@ -5,34 +5,46 @@ import React, { useState } from 'react';
 const Test = () => {
   const [inputString, setInputString] = useState('');
   const [messages, setMessages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false); // New state for loading
 
   const handleInputChange = (e) => {
     setInputString(e.target.value);
   };
 
+  // Function to compress the entire message history into a single string
+  const compressMessages = (messages) => {
+    return messages.map(message => `${message.sender}: ${message.text}`).join(' | ');
+  };
+
   const handleSubmit = async () => {
-    if (!inputString.trim()) {
-      // Avoid sending empty messages
+    if (!inputString.trim() || isLoading) {
+      // Avoid sending empty messages or submitting while already loading
       return;
     }
 
+    // Set loading to true before making the request
+    setIsLoading(true);
+
     // Add the user's message to the message list
-    setMessages((prevMessages) => [
-      ...prevMessages,
+    const newMessages = [
+      ...messages,
       { sender: 'user', text: inputString },
-    ]);
+    ];
 
     // Clear the input field
     setInputString('');
 
+    // Compress the entire message history into a single string
+    const compressedHistory = compressMessages(newMessages);
+
     try {
-      // Make a POST request to the Flask backend
+      // Make a POST request to the Flask backend with the compressed conversation history
       const response = await fetch('http://localhost:5030/process-string', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ input_string: inputString }),
+        body: JSON.stringify({ input_string: compressedHistory }), // Send compressed string
       });
 
       if (!response.ok) {
@@ -42,18 +54,21 @@ const Test = () => {
       const data = await response.json();
 
       // Add the backend's response to the message list
-      setMessages((prevMessages) => [
-        ...prevMessages,
+      setMessages([
+        ...newMessages,
         { sender: 'bot', text: data.result },
       ]);
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error);
 
       // Optionally add an error message to the chat
-      setMessages((prevMessages) => [
-        ...prevMessages,
+      setMessages([
+        ...newMessages,
         { sender: 'bot', text: 'There was an error processing your request.' },
       ]);
+    } finally {
+      // Set loading to false regardless of the request outcome
+      setIsLoading(false);
     }
   };
 
@@ -86,8 +101,12 @@ const Test = () => {
           placeholder="Type a message..."
           style={styles.input}
         />
-        <button onClick={handleSubmit} style={styles.button}>
-          Send
+        <button 
+          onClick={handleSubmit} 
+          style={{ ...styles.button, backgroundColor: isLoading ? '#b0bec5' : '#6200ea' }}
+          disabled={isLoading} // Disable button while loading
+        >
+          {isLoading ? 'Sending...' : 'Send'}
         </button>
       </div>
     </div>
@@ -139,7 +158,6 @@ const styles = {
   },
   button: {
     padding: '10px 20px',
-    backgroundColor: '#6200ea',
     color: 'white',
     border: 'none',
     borderRadius: '5px',
