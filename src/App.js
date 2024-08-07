@@ -8,6 +8,7 @@ import Footer from './Footer';
 import ChatLayout from './ChatBot/ChatLayout';
 import { ChapterProvider } from './JsonState';
 import Editor from './Editor/EditorLayout';
+import Test from './Test/Test';
 
 // Component to conditionally apply StrictMode
 const ConditionalStrictMode = ({ children }) => {
@@ -29,6 +30,7 @@ function App() {
             <Routes>
               <Route path="/" element={<ChatLayout />} />
               <Route path="/editor" element={<Editor />} />
+              <Route path="/test" element={<Test />} /> {/* Add Test Route */}
             </Routes>
           </ConditionalStrictMode>
           <Footer />
