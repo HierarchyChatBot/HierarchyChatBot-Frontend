@@ -13,7 +13,7 @@ const Test = () => {
   const handleSubmit = async () => {
     try {
       // Make a POST request to the Flask backend
-      const response = await fetch('http://localhost:5000/process-string', {
+      const response = await fetch('http://localhost:5030/process-string', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
