@@ -5,7 +5,7 @@ import { useChapter } from '../JsonState';
 import { useHistory } from '../HistoryHandler';
 
 const ChatRight = () => {
-  const { selectedChapter, selectedSubItem } = useChapter();
+  const { selectedChapter, selectedSubItem, chapters } = useChapter();
   const { getHistory, addMessage } = useHistory();
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -13,13 +13,14 @@ const ChatRight = () => {
 
   useEffect(() => {
     if (selectedChapter && selectedSubItem) {
-      const chapterId = selectedChapter.id;
-      const subItemId = selectedSubItem.item; // Assuming item is unique within the chapter
-      setCurrentKey(`[${chapterId}, ${subItemId}]`);
+      const chapterIndex = chapters.findIndex(ch => ch.id === selectedChapter.id);
+      const subItemIndex = selectedChapter.subItems.findIndex(subItem => subItem.item === selectedSubItem.item);
+
+      setCurrentKey(`[${chapterIndex}, ${subItemIndex}]`);
     } else {
       setCurrentKey('[null, null]');
     }
-  }, [selectedChapter, selectedSubItem]);
+  }, [selectedChapter, selectedSubItem, chapters]);
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
@@ -44,12 +45,12 @@ const ChatRight = () => {
       return;
     }
 
-    const chapterId = selectedChapter.id;
-    const subItemId = selectedSubItem.item;
+    const chapterIndex = chapters.findIndex(ch => ch.id === selectedChapter.id);
+    const subItemIndex = selectedChapter.subItems.findIndex(subItem => subItem.item === selectedSubItem.item);
     const newUserMessage = { text: inputValue, timestamp: new Date().toISOString(), sender: 'user' };
-    const updatedMessages = [...getHistory(chapterId, subItemId), newUserMessage];
+    const updatedMessages = [...getHistory(chapterIndex, subItemIndex), newUserMessage];
 
-    addMessage(chapterId, subItemId, newUserMessage);
+    addMessage(chapterIndex, subItemIndex, newUserMessage);
 
     setInputValue('');
 
@@ -70,10 +71,10 @@ const ChatRight = () => {
 
       const data = await response.json();
 
-      addMessage(chapterId, subItemId, { text: data.result, timestamp: new Date().toISOString(), sender: 'bot' });
+      addMessage(chapterIndex, subItemIndex, { text: data.result, timestamp: new Date().toISOString(), sender: 'bot' });
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error);
-      addMessage(chapterId, subItemId, { text: 'There was an error processing your request.', timestamp: new Date().toISOString(), sender: 'bot' });
+      addMessage(chapterIndex, subItemIndex, { text: 'There was an error processing your request.', timestamp: new Date().toISOString(), sender: 'bot' });
     } finally {
       setIsLoading(false);
     }
@@ -83,7 +84,7 @@ const ChatRight = () => {
     <div style={{ border: '1px solid #ddd', padding: '20px', backgroundColor: '#f9f9f9' }} className="column">
       <h2>Chat to AI</h2>
       <div style={{ marginBottom: '20px', height: '300px', overflowY: 'scroll', border: '1px solid #ccc', padding: '10px' }}>
-        {getHistory(selectedChapter ? selectedChapter.id : '', selectedSubItem ? selectedSubItem.item : '').map((msg, index) => (
+        {getHistory(selectedChapter ? chapters.findIndex(ch => ch.id === selectedChapter.id) : '', selectedSubItem ? selectedChapter.subItems.findIndex(subItem => subItem.item === selectedSubItem.item) : '').map((msg, index) => (
           <div
             key={index}
             style={{
