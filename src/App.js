@@ -9,6 +9,7 @@ import ChatLayout from './ChatBot/ChatLayout';
 import { ChapterProvider } from './JsonState';
 import Editor from './Editor/EditorLayout';
 import Test from './Test/Test';
+import { HistoryProvider } from './HistoryHandler'; // Import HistoryProvider
 
 // Component to conditionally apply StrictMode
 const ConditionalStrictMode = ({ children }) => {
@@ -23,19 +24,21 @@ const ConditionalStrictMode = ({ children }) => {
 function App() {
   return (
     <ChapterProvider>
-      <Router>
-        <div className="App">
-          <Body />
-          <ConditionalStrictMode>
-            <Routes>
-              <Route path="/" element={<ChatLayout />} />
-              <Route path="/editor" element={<Editor />} />
-              <Route path="/test" element={<Test />} /> {/* Add Test Route */}
-            </Routes>
-          </ConditionalStrictMode>
-          <Footer />
-        </div>
-      </Router>
+      <HistoryProvider> {/* Wrap with HistoryProvider */}
+        <Router>
+          <div className="App">
+            <Body />
+            <ConditionalStrictMode>
+              <Routes>
+                <Route path="/" element={<ChatLayout />} />
+                <Route path="/editor" element={<Editor />} />
+                <Route path="/test" element={<Test />} /> {/* Add Test Route */}
+              </Routes>
+            </ConditionalStrictMode>
+            <Footer />
+          </div>
+        </Router>
+      </HistoryProvider>
     </ChapterProvider>
   );
 }

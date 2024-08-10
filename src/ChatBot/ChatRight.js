@@ -1,18 +1,30 @@
 // ChatRight.js
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useChapter } from '../JsonState';
+import { useHistory } from '../HistoryHandler';
 
 const ChatRight = () => {
-  const { chatHistory, addMessage } = useChapter();
+  const { selectedChapter, selectedSubItem } = useChapter();
+  const { getHistory, addMessage } = useHistory();
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [currentKey, setCurrentKey] = useState('[null, null]');
+
+  useEffect(() => {
+    if (selectedChapter && selectedSubItem) {
+      const chapterId = selectedChapter.id;
+      const subItemId = selectedSubItem.item; // Assuming item is unique within the chapter
+      setCurrentKey(`[${chapterId}, ${subItemId}]`);
+    } else {
+      setCurrentKey('[null, null]');
+    }
+  }, [selectedChapter, selectedSubItem]);
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
   };
 
-  // Function to compress the entire message history into a single string
   const compressMessages = (messages) => {
     return messages.map(message => `${message.sender}: ${message.text}`).join(' | ');
   };
@@ -26,11 +38,18 @@ const ChatRight = () => {
 
     setIsLoading(true);
 
-    const newUserMessage = { text: inputValue, timestamp: new Date().toISOString(), sender: 'user' };
-    const updatedMessages = [...chatHistory, newUserMessage];
+    if (!selectedChapter || !selectedSubItem) {
+      console.error('Chapter or subitem is not selected.');
+      setIsLoading(false);
+      return;
+    }
 
-    // Display the user's message in the chat
-    addMessage(newUserMessage);
+    const chapterId = selectedChapter.id;
+    const subItemId = selectedSubItem.item;
+    const newUserMessage = { text: inputValue, timestamp: new Date().toISOString(), sender: 'user' };
+    const updatedMessages = [...getHistory(chapterId, subItemId), newUserMessage];
+
+    addMessage(chapterId, subItemId, newUserMessage);
 
     setInputValue('');
 
@@ -51,13 +70,10 @@ const ChatRight = () => {
 
       const data = await response.json();
 
-      // Display the bot's reply in the chat
-      addMessage({ text: data.result, timestamp: new Date().toISOString(), sender: 'bot' });
+      addMessage(chapterId, subItemId, { text: data.result, timestamp: new Date().toISOString(), sender: 'bot' });
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error);
-
-      // Optionally add an error message to the chat
-      addMessage({ text: 'There was an error processing your request.', timestamp: new Date().toISOString(), sender: 'bot' });
+      addMessage(chapterId, subItemId, { text: 'There was an error processing your request.', timestamp: new Date().toISOString(), sender: 'bot' });
     } finally {
       setIsLoading(false);
     }
@@ -67,7 +83,7 @@ const ChatRight = () => {
     <div style={{ border: '1px solid #ddd', padding: '20px', backgroundColor: '#f9f9f9' }} className="column">
       <h2>Chat to AI</h2>
       <div style={{ marginBottom: '20px', height: '300px', overflowY: 'scroll', border: '1px solid #ccc', padding: '10px' }}>
-        {chatHistory.map((msg, index) => (
+        {getHistory(selectedChapter ? selectedChapter.id : '', selectedSubItem ? selectedSubItem.item : '').map((msg, index) => (
           <div
             key={index}
             style={{
@@ -106,6 +122,9 @@ const ChatRight = () => {
           {isLoading ? 'Sending...' : 'Send'}
         </button>
       </form>
+      <div style={{ marginTop: '10px', fontSize: '14px', color: '#555' }}>
+        <strong>Current Key:</strong> {currentKey}
+      </div>
     </div>
   );
 };
