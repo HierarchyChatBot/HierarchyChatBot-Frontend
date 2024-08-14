@@ -26,7 +26,7 @@ const ChatRight = () => {
     setInputValue(e.target.value);
   };
 
-  const compressMessages = (messages) => {
+  const formatHistory = (messages) => {
     return messages.map(message => `${message.sender}: ${message.text}`).join(' | ');
   };
 
@@ -54,7 +54,17 @@ const ChatRight = () => {
 
     setInputValue('');
 
-    const compressedHistory = compressMessages(updatedMessages);
+    const formattedHistory = formatHistory(updatedMessages);
+
+    const compressedHistory = JSON.stringify({
+      history: formattedHistory,
+      ch_title: selectedChapter.title,
+      ch_content: selectedChapter.description,
+      sub_title: selectedSubItem.title,
+      sub_content: selectedSubItem.description,
+      user: inputValue
+    });
+
 
     try {
       const response = await fetch('http://localhost:5030/process-string', {
