@@ -37,7 +37,7 @@ export const HistoryProvider = ({ children }) => {
   // Convert historyMap to a JSON string
   const saveHistoryToJson = () => {
     const historyArray = Array.from(historyMap.entries()); // Convert Map to array of [key, value] pairs
-    return JSON.stringify(historyArray);
+    return JSON.stringify(historyArray, null, 2); // Pretty-print JSON with 2 spaces of indentation
   };
 
   // Load historyMap from a JSON string
