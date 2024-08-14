@@ -5,6 +5,7 @@ import { createContext, useState, useContext } from 'react';
 const HistoryContext = createContext();
 
 export const HistoryProvider = ({ children }) => {
+  // Initialize historyMap with an array of key-value pairs that represent chapter and subitem history
   const [historyMap, setHistoryMap] = useState(new Map());
 
   const getHistory = (chapterId, subItemId) => {
@@ -33,8 +34,20 @@ export const HistoryProvider = ({ children }) => {
     setHistoryMap(new Map());
   };
 
+  // Convert historyMap to a JSON string
+  const saveHistoryToJson = () => {
+    const historyArray = Array.from(historyMap.entries()); // Convert Map to array of [key, value] pairs
+    return JSON.stringify(historyArray);
+  };
+
+  // Load historyMap from a JSON string
+  const loadHistoryFromJson = (json) => {
+    const historyArray = JSON.parse(json); // Parse JSON string to an array
+    setHistoryMap(new Map(historyArray)); // Convert array back to Map and set it as historyMap
+  };
+
   return (
-    <HistoryContext.Provider value={{ getHistory, addMessage, removeHistory, resetHistories }}>
+    <HistoryContext.Provider value={{ getHistory, addMessage, removeHistory, resetHistories, saveHistoryToJson, loadHistoryFromJson }}>
       {children}
     </HistoryContext.Provider>
   );
