@@ -2,6 +2,21 @@
 
 import { createContext, useState, useContext } from 'react';
 
+// Utility functions for index calculations
+const getChapterIndex = (chapters, selectedChapter) => {
+  return chapters.findIndex(ch => ch.id === selectedChapter.id);
+};
+
+const getSubItemIndex = (selectedChapter, selectedSubItem) => {
+  return selectedChapter.subItems.findIndex(subItem => subItem.item === selectedSubItem.item);
+};
+
+const getCurrentKey = (chapters, selectedChapter, selectedSubItem) => {
+  const chapterIndex = selectedChapter ? getChapterIndex(chapters, selectedChapter) : null;
+  const subItemIndex = selectedSubItem ? getSubItemIndex(selectedChapter, selectedSubItem) : null;
+  return `[${chapterIndex}, ${subItemIndex}]`;
+};
+
 const HistoryContext = createContext();
 
 export const HistoryProvider = ({ children }) => {
@@ -74,6 +89,9 @@ export const HistoryProvider = ({ children }) => {
       loadHistoryFromJson,
       setResult,
       getResult,
+      getChapterIndex,
+      getSubItemIndex,
+      getCurrentKey,
     }}>
       {children}
     </HistoryContext.Provider>

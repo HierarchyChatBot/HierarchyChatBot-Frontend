@@ -6,18 +6,17 @@ import { useHistory } from '../HistoryHandler';
 
 const ChatMiddle = () => {
   const { selectedChapter, selectedSubItem, chapters } = useChapter();
-  const { getResult, setResult } = useHistory();
+  const { getResult, setResult, getCurrentKey, getChapterIndex, getSubItemIndex  } = useHistory();
   
-  // State to manage the editable result
   const [editableResult, setEditableResult] = useState('');
   const [currentKey, setCurrentKey] = useState('[null, null]');
 
   useEffect(() => {
     if (selectedChapter && selectedSubItem) {
-      const chapterIndex = chapters.findIndex(ch => ch.id === selectedChapter.id);
-      const subItemIndex = selectedChapter.subItems.findIndex(subItem => subItem.item === selectedSubItem.item);
+      const chapterIndex = getChapterIndex(chapters, selectedChapter);
+      const subItemIndex = getSubItemIndex(selectedChapter, selectedSubItem);
       
-      setCurrentKey(`[${chapterIndex}, ${subItemIndex}]`);
+      setCurrentKey(getCurrentKey(chapters, selectedChapter, selectedSubItem));
       
       const result = getResult(chapterIndex, subItemIndex);
       setEditableResult(result || '');
@@ -25,7 +24,7 @@ const ChatMiddle = () => {
       setCurrentKey('[null, null]');
       setEditableResult('');
     }
-  }, [selectedChapter, selectedSubItem, getResult, chapters]);
+  }, [selectedChapter, selectedSubItem, getResult, chapters, getCurrentKey]);
 
   const handleResultChange = (e) => {
     setEditableResult(e.target.value);
@@ -33,8 +32,8 @@ const ChatMiddle = () => {
 
   const handleResultSave = () => {
     if (selectedChapter && selectedSubItem) {
-      const chapterIndex = chapters.findIndex(ch => ch.id === selectedChapter.id);
-      const subItemIndex = selectedChapter.subItems.findIndex(subItem => subItem.item === selectedSubItem.item);
+      const chapterIndex = getChapterIndex(chapters, selectedChapter);
+      const subItemIndex = getSubItemIndex(selectedChapter, selectedSubItem);
       setResult(chapterIndex, subItemIndex, editableResult);
     }
   };
@@ -63,7 +62,7 @@ const ChatMiddle = () => {
             <textarea
               value={editableResult}
               onChange={handleResultChange}
-              onBlur={handleResultSave} // Save result when textarea loses focus
+              onBlur={handleResultSave}
               rows="5"
               style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
               placeholder="Edit the result here..."

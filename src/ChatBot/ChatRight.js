@@ -6,21 +6,14 @@ import { useHistory } from '../HistoryHandler';
 
 const ChatRight = () => {
   const { selectedChapter, selectedSubItem, chapters } = useChapter();
-  const { getHistory, addMessage } = useHistory();
+  const { getHistory, addMessage, getCurrentKey, getChapterIndex, getSubItemIndex } = useHistory();
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [currentKey, setCurrentKey] = useState('[null, null]');
 
   useEffect(() => {
-    if (selectedChapter && selectedSubItem) {
-      const chapterIndex = chapters.findIndex(ch => ch.id === selectedChapter.id);
-      const subItemIndex = selectedChapter.subItems.findIndex(subItem => subItem.item === selectedSubItem.item);
-
-      setCurrentKey(`[${chapterIndex}, ${subItemIndex}]`);
-    } else {
-      setCurrentKey('[null, null]');
-    }
-  }, [selectedChapter, selectedSubItem, chapters]);
+    setCurrentKey(getCurrentKey(chapters, selectedChapter, selectedSubItem));
+  }, [selectedChapter, selectedSubItem, chapters, getCurrentKey]);
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
@@ -45,8 +38,8 @@ const ChatRight = () => {
       return;
     }
 
-    const chapterIndex = chapters.findIndex(ch => ch.id === selectedChapter.id);
-    const subItemIndex = selectedChapter.subItems.findIndex(subItem => subItem.item === selectedSubItem.item);
+    const chapterIndex = getChapterIndex(chapters, selectedChapter);
+    const subItemIndex = getSubItemIndex(selectedChapter, selectedSubItem);
     const newUserMessage = { text: inputValue, timestamp: new Date().toISOString(), sender: 'user' };
     const updatedMessages = [...getHistory(chapterIndex, subItemIndex), newUserMessage];
 
@@ -64,7 +57,6 @@ const ChatRight = () => {
       sub_content: selectedSubItem.description,
       user: inputValue
     });
-
 
     try {
       const response = await fetch('http://localhost:5030/process-string', {
@@ -94,7 +86,7 @@ const ChatRight = () => {
     <div style={{ border: '1px solid #ddd', padding: '20px', backgroundColor: '#f9f9f9' }} className="column">
       <h2>Chat to AI</h2>
       <div style={{ marginBottom: '20px', height: '300px', overflowY: 'scroll', border: '1px solid #ccc', padding: '10px' }}>
-        {getHistory(selectedChapter ? chapters.findIndex(ch => ch.id === selectedChapter.id) : '', selectedSubItem ? selectedChapter.subItems.findIndex(subItem => subItem.item === selectedSubItem.item) : '').map((msg, index) => (
+        {getHistory(selectedChapter ? getChapterIndex(chapters, selectedChapter) : '', selectedSubItem ? getSubItemIndex(selectedChapter, selectedSubItem) : '').map((msg, index) => (
           <div
             key={index}
             style={{
