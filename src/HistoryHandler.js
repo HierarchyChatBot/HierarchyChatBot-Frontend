@@ -5,8 +5,8 @@ import { createContext, useState, useContext } from 'react';
 const HistoryContext = createContext();
 
 export const HistoryProvider = ({ children }) => {
-  // Initialize historyMap with an array of key-value pairs that represent chapter and subitem history
   const [historyMap, setHistoryMap] = useState(new Map());
+  const [resultMap, setResultMap] = useState(new Map());
 
   const getHistory = (chapterId, subItemId) => {
     const key = JSON.stringify([chapterId, subItemId]);
@@ -32,22 +32,49 @@ export const HistoryProvider = ({ children }) => {
 
   const resetHistories = () => {
     setHistoryMap(new Map());
+    setResultMap(new Map());
   };
 
-  // Convert historyMap to a JSON string
   const saveHistoryToJson = () => {
-    const historyArray = Array.from(historyMap.entries()); // Convert Map to array of [key, value] pairs
-    return JSON.stringify(historyArray, null, 2); // Pretty-print JSON with 2 spaces of indentation
+    const historyArray = Array.from(historyMap.entries());
+    const resultArray = Array.from(resultMap.entries());
+    return JSON.stringify({
+      History: Object.fromEntries(historyArray),
+      Result: Object.fromEntries(resultArray),
+    }, null, 2);
   };
 
-  // Load historyMap from a JSON string
   const loadHistoryFromJson = (json) => {
-    const historyArray = JSON.parse(json); // Parse JSON string to an array
-    setHistoryMap(new Map(historyArray)); // Convert array back to Map and set it as historyMap
+    const data = JSON.parse(json);
+    if (data.History) {
+      setHistoryMap(new Map(Object.entries(data.History)));
+    }
+    if (data.Result) {
+      setResultMap(new Map(Object.entries(data.Result)));
+    }
+  };
+
+  const setResult = (chapterId, subItemId, content) => {
+    const key = JSON.stringify([chapterId, subItemId]);
+    setResultMap(prevMap => new Map(prevMap).set(key, content));
+  };
+
+  const getResult = (chapterId, subItemId) => {
+    const key = JSON.stringify([chapterId, subItemId]);
+    return resultMap.get(key) || null;
   };
 
   return (
-    <HistoryContext.Provider value={{ getHistory, addMessage, removeHistory, resetHistories, saveHistoryToJson, loadHistoryFromJson }}>
+    <HistoryContext.Provider value={{
+      getHistory,
+      addMessage,
+      removeHistory,
+      resetHistories,
+      saveHistoryToJson,
+      loadHistoryFromJson,
+      setResult,
+      getResult,
+    }}>
       {children}
     </HistoryContext.Provider>
   );
