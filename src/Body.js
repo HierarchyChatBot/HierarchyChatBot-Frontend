@@ -39,7 +39,7 @@ const Body = () => {
           <button style={{ marginLeft: '10px' }}>Chat Bot</button>
         </Link>
         <Link to="/editor">
-          <button style={{ marginLeft: '10px' }}>Open Editor</button>
+          <button style={{ marginLeft: '10px' }}>Book Editor</button>
         </Link>
         <input
           type="file"
@@ -48,9 +48,9 @@ const Body = () => {
           ref={fileInputRef}
           style={{ display: 'none' }} // Hide the default file input
         />
-        <button onClick={handleButtonClick} style={{ marginLeft: '10px' }}>Load</button>
-        <button onClick={handleSaveClick} style={{ marginLeft: '10px' }}>Save</button>
-        <button onClick={handleNewClick} style={{ marginLeft: '10px' }}>New</button>
+        <button onClick={handleButtonClick} style={{ marginLeft: '10px' }}>Load Book</button>
+        <button onClick={handleSaveClick} style={{ marginLeft: '10px' }}>Save Book</button>
+        <button onClick={handleNewClick} style={{ marginLeft: '10px' }}>New Book</button>
       </nav>
     </div>
   );
