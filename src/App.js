@@ -32,7 +32,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<ChatLayout />} />
                 <Route path="/editor" element={<Editor />} />
-                <Route path="/test" element={<Test />} /> {/* Add Test Route */}
+                <Route path="/test" element={<Test />} />
               </Routes>
             </ConditionalStrictMode>
             <Footer />
