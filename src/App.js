@@ -18,22 +18,39 @@ const ConditionalStrictMode = ({ children }) => {
   return useStrictMode ? <React.StrictMode>{children}</React.StrictMode> : <>{children}</>;
 };
 
+const LayoutWrapper = ({ children }) => {
+  const location = useLocation();
+  const isGraphRoute = location.pathname === '/graph';
+
+  if (isGraphRoute) {
+    return children; // Render without Body and Footer
+  }
+
+  return (
+    <>
+      <Body />
+      {children}
+      <Footer />
+    </>
+  );
+};
+
 function App() {
   return (
     <ChapterProvider>
       <HistoryProvider>
         <Router>
           <div className="App">
-            <Body />
             <ConditionalStrictMode>
-              <Routes>
-                <Route path="/" element={<ChatLayout />} />
-                <Route path="/editor" element={<Editor />} />
-                <Route path="/test" element={<Test />} />
-                <Route path="/graph" element={<GraphApp />} /> {/* Route for GraphApp */}
-              </Routes>
+              <LayoutWrapper>
+                <Routes>
+                  <Route path="/" element={<ChatLayout />} />
+                  <Route path="/editor" element={<Editor />} />
+                  <Route path="/test" element={<Test />} />
+                  <Route path="/graph" element={<GraphApp />} /> {/* Route for GraphApp */}
+                </Routes>
+              </LayoutWrapper>
             </ConditionalStrictMode>
-            <Footer />
           </div>
         </Router>
       </HistoryProvider>
