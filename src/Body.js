@@ -67,6 +67,9 @@ const Body = () => {
         <Link to="/">
           <button style={{ marginLeft: '10px' }}>Chat Bot</button>
         </Link>
+        <Link to="/graph">
+          <button style={{ marginLeft: '10px' }}>Graph Editor</button>
+        </Link>
         <Link to="/editor">
           <button style={{ marginLeft: '10px' }}>Book Editor</button>
         </Link>
@@ -88,7 +91,7 @@ const Body = () => {
         <button onClick={handleSaveClick} style={{ marginLeft: '10px' }}>Save Book</button>
         <button onClick={handleNewClick} style={{ marginLeft: '10px' }}>New Book</button>
         <button onClick={handleSaveChatClick} style={{ marginLeft: '10px' }}>Snapshot Chat</button>
-        <button onClick={handleChatButtonClick} style={{ marginLeft: '10px' }}>Load Chat</button>
+        <button onClick={handleChatButtonClick} style={{ marginLeft: '10px' }}>Load Snapshot</button>
       </nav>
     </div>
   );
