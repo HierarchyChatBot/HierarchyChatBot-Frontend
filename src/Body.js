@@ -4,7 +4,7 @@ import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useChapter } from './JsonState';
 import { useHistory } from './HistoryHandler';
-import { useConvertGraph } from './ChatBot/ConvertGraph';  // Import the custom hook
+import { useConvertGraph } from './ConvertGraph';  // Import the custom hook
 
 const Body = () => {
   const { loadChaptersFromFile, saveChaptersToFile, resetChapters } = useChapter();

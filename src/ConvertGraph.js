@@ -1,5 +1,5 @@
 // ConvertGraph.js
-import { useHistory } from '../HistoryHandler';
+import { useHistory } from './HistoryHandler';
 import { useCallback } from 'react';
 
 // Function to process promptMap data
