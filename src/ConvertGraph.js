@@ -1,20 +1,22 @@
 // ConvertGraph.js
+
 import { useHistory } from './HistoryHandler';
 import { useCallback } from 'react';
 import { useGraphManager } from './Graph/GraphManagerContext';
 
 // Function to process promptMap data
-const processPrompts = (promptMap, nodes, setNodes, nodeIdCounter, setNodeIdCounter) => {
+const processPrompts = (promptMap, setNodes, nodeIdCounter, setNodeIdCounter) => {
   if (promptMap && promptMap.size > 0) {
     let xOffset = 0;
     const newNodes = [];
+    let currentNodeIdCounter = nodeIdCounter; // Capture the initial value
 
     promptMap.forEach((prompt, key) => {
       console.log(`Key: ${key}`);
       console.log(`Prompt: ${prompt}`);
 
       const newNode = {
-        id: nodeIdCounter.toString(),
+        id: currentNodeIdCounter.toString(),
         type: 'textUpdater',
         data: { 
           name: key, 
@@ -31,12 +33,16 @@ const processPrompts = (promptMap, nodes, setNodes, nodeIdCounter, setNodeIdCoun
       };
 
       newNodes.push(newNode);
-      setNodeIdCounter(prevCounter => prevCounter + 1);
+      currentNodeIdCounter += 1; // Increment local counter
 
-      xOffset += 50; // Increase x-offset by 250 to prevent overlap
+      xOffset += 250; // Increase x-offset by 50 to prevent overlap
     });
 
+    // Update nodes state
     setNodes(prevNodes => [...prevNodes, ...newNodes]);
+
+    // Update nodeIdCounter state
+    setNodeIdCounter(currentNodeIdCounter);
   } else {
     console.log('No prompts available.');
   }
@@ -48,6 +54,6 @@ export const useConvertGraph = () => {
   const { nodes, setNodes, nodeIdCounter, setNodeIdCounter } = useGraphManager();
 
   return useCallback(() => {
-    processPrompts(promptMap, nodes, setNodes, nodeIdCounter, setNodeIdCounter);
-  }, [promptMap, nodes, setNodes, nodeIdCounter, setNodeIdCounter]);
+    processPrompts(promptMap, setNodes, nodeIdCounter, setNodeIdCounter);
+  }, [promptMap, setNodes, nodeIdCounter, setNodeIdCounter]);
 };
