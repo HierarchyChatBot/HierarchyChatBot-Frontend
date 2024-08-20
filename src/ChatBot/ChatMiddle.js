@@ -6,9 +6,9 @@ import { useHistory } from '../HistoryHandler';
 
 const ChatMiddle = () => {
   const { selectedChapter, selectedSubItem, chapters } = useChapter();
-  const { getResult, setResult, getCurrentKey, getChapterIndex, getSubItemIndex  } = useHistory();
+  const { getPrompt, setPrompt, getCurrentKey, getChapterIndex, getSubItemIndex  } = useHistory();
   
-  const [editableResult, setEditableResult] = useState('');
+  const [editablePrompt, setEditablePrompt] = useState('');
   const [currentKey, setCurrentKey] = useState('[null, null]');
 
   useEffect(() => {
@@ -18,23 +18,23 @@ const ChatMiddle = () => {
       
       setCurrentKey(getCurrentKey(chapters, selectedChapter, selectedSubItem));
       
-      const result = getResult(chapterIndex, subItemIndex);
-      setEditableResult(result || '');
+      const prompt = getPrompt(chapterIndex, subItemIndex);
+      setEditablePrompt(prompt || '');
     } else {
       setCurrentKey('[null, null]');
-      setEditableResult('');
+      setEditablePrompt('');
     }
-  }, [selectedChapter, selectedSubItem, getResult, chapters, getCurrentKey]);
+  }, [selectedChapter, selectedSubItem, getPrompt, chapters, getCurrentKey]);
 
-  const handleResultChange = (e) => {
-    setEditableResult(e.target.value);
+  const handlePromptChange = (e) => {
+    setEditablePrompt(e.target.value);
   };
 
-  const handleResultSave = () => {
+  const handlePromptSave = () => {
     if (selectedChapter && selectedSubItem) {
       const chapterIndex = getChapterIndex(chapters, selectedChapter);
       const subItemIndex = getSubItemIndex(selectedChapter, selectedSubItem);
-      setResult(chapterIndex, subItemIndex, editableResult);
+      setPrompt(chapterIndex, subItemIndex, editablePrompt);
     }
   };
 
@@ -58,14 +58,14 @@ const ChatMiddle = () => {
             </div>
           )}
           <div style={{ marginTop: '20px' }}>
-            <h3>Result:</h3>
+            <h3>Prompt:</h3>
             <textarea
-              value={editableResult}
-              onChange={handleResultChange}
-              onBlur={handleResultSave}
+              value={editablePrompt}
+              onChange={handlePromptChange}
+              onBlur={handlePromptSave}
               rows="5"
               style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
-              placeholder="Edit the result here..."
+              placeholder="Edit the prompt here..."
             />
           </div>
         </div>

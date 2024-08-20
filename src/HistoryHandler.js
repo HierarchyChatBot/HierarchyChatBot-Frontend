@@ -21,7 +21,7 @@ const HistoryContext = createContext();
 
 export const HistoryProvider = ({ children }) => {
   const [historyMap, setHistoryMap] = useState(new Map());
-  const [resultMap, setResultMap] = useState(new Map());
+  const [promptMap, setPromptMap] = useState(new Map());
 
   const getHistory = (chapterId, subItemId) => {
     const key = JSON.stringify([chapterId, subItemId]);
@@ -47,15 +47,15 @@ export const HistoryProvider = ({ children }) => {
 
   const resetHistories = () => {
     setHistoryMap(new Map());
-    setResultMap(new Map());
+    setPromptMap(new Map());
   };
 
   const saveHistoryToJson = () => {
     const historyArray = Array.from(historyMap.entries());
-    const resultArray = Array.from(resultMap.entries());
+    const promptArray = Array.from(promptMap.entries());
     return JSON.stringify({
       History: Object.fromEntries(historyArray),
-      Result: Object.fromEntries(resultArray),
+      Prompt: Object.fromEntries(promptArray),
     }, null, 2);
   };
 
@@ -64,19 +64,19 @@ export const HistoryProvider = ({ children }) => {
     if (data.History) {
       setHistoryMap(new Map(Object.entries(data.History)));
     }
-    if (data.Result) {
-      setResultMap(new Map(Object.entries(data.Result)));
+    if (data.Prompt) {
+      setPromptMap(new Map(Object.entries(data.Prompt)));
     }
   };
 
-  const setResult = (chapterId, subItemId, content) => {
+  const setPrompt = (chapterId, subItemId, content) => {
     const key = JSON.stringify([chapterId, subItemId]);
-    setResultMap(prevMap => new Map(prevMap).set(key, content));
+    setPromptMap(prevMap => new Map(prevMap).set(key, content));
   };
 
-  const getResult = (chapterId, subItemId) => {
+  const getPrompt = (chapterId, subItemId) => {
     const key = JSON.stringify([chapterId, subItemId]);
-    return resultMap.get(key) || null;
+    return promptMap.get(key) || null;
   };
 
   return (
@@ -87,8 +87,8 @@ export const HistoryProvider = ({ children }) => {
       resetHistories,
       saveHistoryToJson,
       loadHistoryFromJson,
-      setResult,
-      getResult,
+      setPrompt,
+      getPrompt,
       getChapterIndex,
       getSubItemIndex,
       getCurrentKey,
