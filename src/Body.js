@@ -4,7 +4,7 @@ import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useChapter } from './JsonState';
 import { useHistory } from './HistoryHandler';
-import ConvertGraph from './ChatBot/ConvertGraph';  // Import ConvertGraph component
+import { useConvertGraph } from './ChatBot/ConvertGraph';  // Import the custom hook
 
 const Body = () => {
   const { loadChaptersFromFile, saveChaptersToFile, resetChapters } = useChapter();
@@ -12,6 +12,8 @@ const Body = () => {
 
   const fileInputRef = useRef(null);
   const chatFileInputRef = useRef(null);
+
+  const generateGraph = useConvertGraph();
 
   // Handler functions
   const handleFileUpload = (event) => {
@@ -68,11 +70,8 @@ const Body = () => {
     }
   };
 
-  // Render the ConvertGraph component conditionally
-  const [showGraph, setShowGraph] = React.useState(false);
-
   const handleGenGraphClick = () => {
-    setShowGraph(true);
+    generateGraph();
   };
 
   return (
@@ -108,7 +107,6 @@ const Body = () => {
         <button onClick={handleLoadSnapshotClick} style={{ marginLeft: '10px' }}>Load Snapshot</button>
         <button onClick={handleGenGraphClick} style={{ marginLeft: '10px' }}>Gen Graph</button>
       </nav>
-      {showGraph && <ConvertGraph />}
     </div>
   );
 };
