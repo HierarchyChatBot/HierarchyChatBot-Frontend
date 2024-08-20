@@ -43,7 +43,7 @@ const Body = () => {
     saveChaptersToFile('chapters.json');
   };
 
-  const handleSaveChatClick = () => {
+  const handleSaveSnapshotClick = () => {
     const chatHistoryJson = saveHistoryToJson();
     const blob = new Blob([chatHistoryJson], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -55,10 +55,19 @@ const Body = () => {
     document.body.removeChild(a);
   };
 
+  const handleLoadSnapshotClick = () => {
+    chatFileInputRef.current.click();
+  };
+
   const handleNewClick = () => {
     if (window.confirm('Are you sure you want to clear all chapters?')) {
       window.location.reload(); // Refresh the page
     }
+  };
+
+  const handleGenGraphClick = () => {
+    // Logic to generate the graph would go here
+    console.log('Generate Graph button clicked');
   };
 
   return (
@@ -90,8 +99,9 @@ const Body = () => {
         <button onClick={handleButtonClick} style={{ marginLeft: '10px' }}>Load Book</button>
         <button onClick={handleSaveClick} style={{ marginLeft: '10px' }}>Save Book</button>
         <button onClick={handleNewClick} style={{ marginLeft: '10px' }}>New Book</button>
-        <button onClick={handleSaveChatClick} style={{ marginLeft: '10px' }}>Snapshot Chat</button>
-        <button onClick={handleChatButtonClick} style={{ marginLeft: '10px' }}>Load Snapshot</button>
+        <button onClick={handleSaveSnapshotClick} style={{ marginLeft: '10px' }}>Save Snapshot</button>
+        <button onClick={handleLoadSnapshotClick} style={{ marginLeft: '10px' }}>Load Snapshot</button>
+        <button onClick={handleGenGraphClick} style={{ marginLeft: '10px' }}>Gen Graph</button>
       </nav>
     </div>
   );
