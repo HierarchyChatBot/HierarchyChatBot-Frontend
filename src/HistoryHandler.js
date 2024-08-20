@@ -92,6 +92,7 @@ export const HistoryProvider = ({ children }) => {
       getChapterIndex,
       getSubItemIndex,
       getCurrentKey,
+      promptMap  // Include promptMap in the context
     }}>
       {children}
     </HistoryContext.Provider>

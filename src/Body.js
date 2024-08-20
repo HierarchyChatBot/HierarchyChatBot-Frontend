@@ -4,17 +4,20 @@ import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useChapter } from './JsonState';
 import { useHistory } from './HistoryHandler';
+import ConvertGraph from './ChatBot/ConvertGraph';  // Import ConvertGraph component
 
 const Body = () => {
   const { loadChaptersFromFile, saveChaptersToFile, resetChapters } = useChapter();
   const { saveHistoryToJson, loadHistoryFromJson, resetHistories } = useHistory();
-  const fileInputRef = useRef(null);
-  const chatFileInputRef = useRef(null); // Ref for chat history file input
 
+  const fileInputRef = useRef(null);
+  const chatFileInputRef = useRef(null);
+
+  // Handler functions
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
-      resetChapters(); // Clear the existing state before loading new data
+      resetChapters();
       loadChaptersFromFile(file);
     }
   };
@@ -22,7 +25,7 @@ const Body = () => {
   const handleChatFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
-      resetHistories(); // Clear the existing chat history before loading new data
+      resetHistories();
       const reader = new FileReader();
       reader.onload = (e) => {
         loadHistoryFromJson(e.target.result);
@@ -61,13 +64,15 @@ const Body = () => {
 
   const handleNewClick = () => {
     if (window.confirm('Are you sure you want to clear all chapters?')) {
-      window.location.reload(); // Refresh the page
+      window.location.reload();
     }
   };
 
+  // Render the ConvertGraph component conditionally
+  const [showGraph, setShowGraph] = React.useState(false);
+
   const handleGenGraphClick = () => {
-    // Logic to generate the graph would go here
-    console.log('Generate Graph button clicked');
+    setShowGraph(true);
   };
 
   return (
@@ -87,14 +92,14 @@ const Body = () => {
           accept=".json"
           onChange={handleFileUpload}
           ref={fileInputRef}
-          style={{ display: 'none' }} // Hide the default file input
+          style={{ display: 'none' }}
         />
         <input
           type="file"
           accept=".json"
           onChange={handleChatFileUpload}
           ref={chatFileInputRef}
-          style={{ display: 'none' }} // Hide the chat history file input
+          style={{ display: 'none' }}
         />
         <button onClick={handleButtonClick} style={{ marginLeft: '10px' }}>Load Book</button>
         <button onClick={handleSaveClick} style={{ marginLeft: '10px' }}>Save Book</button>
@@ -103,6 +108,7 @@ const Body = () => {
         <button onClick={handleLoadSnapshotClick} style={{ marginLeft: '10px' }}>Load Snapshot</button>
         <button onClick={handleGenGraphClick} style={{ marginLeft: '10px' }}>Gen Graph</button>
       </nav>
+      {showGraph && <ConvertGraph />}
     </div>
   );
 };
