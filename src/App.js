@@ -11,6 +11,7 @@ import Editor from './Editor/EditorLayout';
 import Test from './Test/Test';
 import { HistoryProvider } from './HistoryHandler';
 import GraphApp from './Graph/GraphApp'; // Import the GraphApp
+import { GraphManagerProvider } from './Graph/GraphManagerContext'; // Import GraphManagerProvider
 
 const ConditionalStrictMode = ({ children }) => {
   const location = useLocation();
@@ -39,20 +40,22 @@ function App() {
   return (
     <ChapterProvider>
       <HistoryProvider>
-        <Router>
-          <div className="App">
-            <ConditionalStrictMode>
-              <LayoutWrapper>
-                <Routes>
-                  <Route path="/" element={<ChatLayout />} />
-                  <Route path="/editor" element={<Editor />} />
-                  <Route path="/test" element={<Test />} />
-                  <Route path="/graph" element={<GraphApp />} /> {/* Route for GraphApp */}
-                </Routes>
-              </LayoutWrapper>
-            </ConditionalStrictMode>
-          </div>
-        </Router>
+        <GraphManagerProvider> {/* Wrap GraphManagerProvider around the Router */}
+          <Router>
+            <div className="App">
+              <ConditionalStrictMode>
+                <LayoutWrapper>
+                  <Routes>
+                    <Route path="/" element={<ChatLayout />} />
+                    <Route path="/editor" element={<Editor />} />
+                    <Route path="/test" element={<Test />} />
+                    <Route path="/graph" element={<GraphApp />} /> {/* Route for GraphApp */}
+                  </Routes>
+                </LayoutWrapper>
+              </ConditionalStrictMode>
+            </div>
+          </Router>
+        </GraphManagerProvider>
       </HistoryProvider>
     </ChapterProvider>
   );
