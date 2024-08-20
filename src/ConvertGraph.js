@@ -11,15 +11,31 @@ const processPrompts = (promptMap, setNodes, nodeIdCounter, setNodeIdCounter) =>
     const newNodes = [];
     let currentNodeIdCounter = nodeIdCounter; // Capture the initial value
 
-    promptMap.forEach((prompt, key) => {
-      console.log(`Key: ${key}`);
+    // Convert promptMap to an array of [key, prompt] pairs
+    const sortedPrompts = Array.from(promptMap.entries())
+      // Remove brackets, spaces and parse keys into [c, s]
+      .map(([key, prompt]) => {
+        const cleanedKey = key.replace(/[\[\]\s]/g, ''); // Remove brackets and spaces
+        const [c, s] = cleanedKey.split(',').map(Number);
+        return { key: [c, s], prompt, originalKey: key };
+      })
+      // Sort by c, then by s
+      .sort((a, b) => {
+        if (a.key[0] !== b.key[0]) return a.key[0] - b.key[0];
+        return a.key[1] - b.key[1];
+      });
+
+    // Process each sorted entry
+    sortedPrompts.forEach(({ key, prompt, originalKey }) => {
+      const [c, s] = key;
+      console.log(`Key: ${originalKey}`);
       console.log(`Prompt: ${prompt}`);
 
       const newNode = {
         id: currentNodeIdCounter.toString(),
         type: 'textUpdater',
         data: { 
-          name: key, 
+          name: originalKey, 
           description: prompt, 
           type: 'STEP', 
           nexts: [], 
@@ -35,7 +51,7 @@ const processPrompts = (promptMap, setNodes, nodeIdCounter, setNodeIdCounter) =>
       newNodes.push(newNode);
       currentNodeIdCounter += 1; // Increment local counter
 
-      xOffset += 250; // Increase x-offset by 50 to prevent overlap
+      xOffset += 250; // Increase x-offset by 250 to prevent overlap
     });
 
     // Update nodes state
