@@ -5,14 +5,38 @@ import { useCallback } from 'react';
 import { useGraphManager } from './Graph/GraphManager';
 import { processFlowData } from './Graph/JsonUtils';
 
-// Function to process promptMap data
+const baseNode = {
+  pos_x: 0.0,
+  pos_y: 0.0,
+  width: 250.0,  // Fixed width for all nodes
+  height: 400.0, // Fixed height for all nodes
+  nexts: [],
+  type: '',
+  name: '',
+  description: '',
+  tool: '',
+  true_next: null,
+  false_next: null,
+};
+
 const processPrompts = (promptMap, nodeIdCounter, setNodeIdCounter, setEdges, setNodes) => {
   if (promptMap && promptMap.size > 0) {
-    let xOffset = 0;
+    let xOffset = 300; // Offset for subsequent nodes (start node takes position 0)
     const newNodes = [];
-    let currentNodeIdCounter = nodeIdCounter; // Capture the initial value
 
-    // Convert promptMap to an array of [key, prompt] pairs
+    // Add the START node first, using baseNode template
+    const startNode = {
+      ...baseNode,    // Spread the baseNode properties
+      uniq_id: nodeIdCounter.toString(), // Assign nodeIdCounter as the uniq_id
+      type: 'START',
+      name: 'START',
+      nexts: [(nodeIdCounter + 1).toString()], // Connect to the first actual node
+    };
+
+    newNodes.push(startNode); // Add the start node to the nodes array
+    nodeIdCounter += 1; // Increment nodeIdCounter after the START node
+
+    // Convert promptMap to an array of sorted [key, prompt] pairs
     const sortedPrompts = Array.from(promptMap.entries())
       .map(([key, prompt]) => {
         const cleanedKey = key.replace(/[\[\]\s]/g, ''); // Remove brackets and spaces
@@ -29,33 +53,27 @@ const processPrompts = (promptMap, nodeIdCounter, setNodeIdCounter, setEdges, se
       const [c, s] = key;
 
       const newNode = {
-        uniq_id: currentNodeIdCounter.toString(),
-        pos_x: xOffset,
-        pos_y: 0,
-        width: 212,
-        height: 212,
-        nexts: [(currentNodeIdCounter + 1).toString()],
+        ...baseNode, // Use the base node template
+        uniq_id: nodeIdCounter.toString(), // Increment ID for each node
+        pos_x: xOffset, // Adjust x position
+        nexts: [(nodeIdCounter + 1).toString()], // Point to the next node
         type: 'STEP',
         name: originalKey,
         description: prompt,
-        tool: "",
-        true_next: null,
-        false_next: null
       };
 
       newNodes.push(newNode);
-      currentNodeIdCounter += 1; // Increment local counter
-
-      xOffset += 250; // Increase x-offset by 250 to prevent overlap
+      nodeIdCounter += 1; // Increment local counter
+      xOffset += 300; // Increase x-offset by 300 for spacing
     });
 
     // Prepare the final JSON structure
     const jsonData = {
       nodes: newNodes,
-      node_counter: currentNodeIdCounter
+      node_counter: nodeIdCounter, // Update node counter to current value
     };
 
-    // Instead of saving to file, process the JSON data directly
+    // Process the JSON data directly
     processFlowData(jsonData, setEdges, setNodes, setNodeIdCounter);
   } else {
     console.log('No prompts available.');
@@ -71,3 +89,4 @@ export const useConvertGraph = () => {
     processPrompts(promptMap, nodeIdCounter, setNodeIdCounter, setEdges, setNodes);
   }, [promptMap, nodeIdCounter, setNodeIdCounter, setEdges, setNodes]);
 };
+
