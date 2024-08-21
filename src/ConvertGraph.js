@@ -4,6 +4,7 @@ import { useHistory } from './HistoryHandler';
 import { useCallback } from 'react';
 import { useGraphManager } from './Graph/GraphManager';
 import { processFlowData } from './Graph/JsonUtils';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const baseNode = {
   pos_x: 0.0,
@@ -19,7 +20,7 @@ const baseNode = {
   false_next: null,
 };
 
-const processPrompts = (promptMap, nodeIdCounter, setNodeIdCounter, setEdges, setNodes) => {
+const processPrompts = (promptMap, nodeIdCounter, setNodeIdCounter, setEdges, setNodes, navigate) => { // Add navigate as parameter
   if (promptMap && promptMap.size > 0) {
     let xOffset = 300; // Offset for subsequent nodes (start node takes position 0)
     const newNodes = [];
@@ -75,6 +76,9 @@ const processPrompts = (promptMap, nodeIdCounter, setNodeIdCounter, setEdges, se
 
     // Process the JSON data directly
     processFlowData(jsonData, setEdges, setNodes, setNodeIdCounter);
+
+    // Navigate to the graph route after processing
+    navigate('/graph');
   } else {
     console.log('No prompts available.');
   }
@@ -83,10 +87,10 @@ const processPrompts = (promptMap, nodeIdCounter, setNodeIdCounter, setEdges, se
 // Custom hook to provide the processPrompts function
 export const useConvertGraph = () => {
   const { promptMap } = useHistory();
-  const { nodeIdCounter, setNodeIdCounter, setNodes, setEdges} = useGraphManager();
+  const { nodeIdCounter, setNodeIdCounter, setNodes, setEdges } = useGraphManager();
+  const navigate = useNavigate(); // Use the useNavigate hook
 
   return useCallback(() => {
-    processPrompts(promptMap, nodeIdCounter, setNodeIdCounter, setEdges, setNodes);
-  }, [promptMap, nodeIdCounter, setNodeIdCounter, setEdges, setNodes]);
+    processPrompts(promptMap, nodeIdCounter, setNodeIdCounter, setEdges, setNodes, navigate); // Pass navigate to processPrompts
+  }, [promptMap, nodeIdCounter, setNodeIdCounter, setEdges, setNodes, navigate]);
 };
-
