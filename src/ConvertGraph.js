@@ -2,10 +2,11 @@
 
 import { useHistory } from './HistoryHandler';
 import { useCallback } from 'react';
-import { useGraphManager } from './Graph/GraphManagerContext';
+import { useGraphManager } from './Graph/GraphManager';
+import { processFlowData } from './Graph/JsonUtils';
 
 // Function to process promptMap data
-const processPrompts = (promptMap, nodeIdCounter, setNodeIdCounter) => {
+const processPrompts = (promptMap, nodeIdCounter, setNodeIdCounter, setEdges, setNodes) => {
   if (promptMap && promptMap.size > 0) {
     let xOffset = 0;
     const newNodes = [];
@@ -54,33 +55,19 @@ const processPrompts = (promptMap, nodeIdCounter, setNodeIdCounter) => {
       node_counter: currentNodeIdCounter
     };
 
-    // Save JSON to a file (for browser environment)
-    saveToFile('temp.json', JSON.stringify(jsonData, null, 2));
-
-    // Update nodeIdCounter state
-    setNodeIdCounter(currentNodeIdCounter);
+    // Instead of saving to file, process the JSON data directly
+    processFlowData(jsonData, setEdges, setNodes, setNodeIdCounter);
   } else {
     console.log('No prompts available.');
   }
 };
 
-// Function to trigger download of JSON data in browser
-const saveToFile = (filename, data) => {
-  const blob = new Blob([data], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
-};
-
 // Custom hook to provide the processPrompts function
 export const useConvertGraph = () => {
   const { promptMap } = useHistory();
-  const { nodeIdCounter, setNodeIdCounter } = useGraphManager();
+  const { nodeIdCounter, setNodeIdCounter, setNodes, setEdges} = useGraphManager();
 
   return useCallback(() => {
-    processPrompts(promptMap, nodeIdCounter, setNodeIdCounter);
-  }, [promptMap, nodeIdCounter, setNodeIdCounter]);
+    processPrompts(promptMap, nodeIdCounter, setNodeIdCounter, setEdges, setNodes);
+  }, [promptMap, nodeIdCounter, setNodeIdCounter, setEdges, setNodes]);
 };

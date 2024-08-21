@@ -11,7 +11,7 @@ import Editor from './Editor/EditorLayout';
 import Test from './Test/Test';
 import { HistoryProvider } from './HistoryHandler';
 import GraphApp from './Graph/GraphApp'; // Import the GraphApp
-import { GraphManagerProvider } from './Graph/GraphManagerContext'; // Import GraphManagerProvider
+import { GraphManagerProvider } from './Graph/GraphManager'; // Import GraphManagerProvider
 
 const ConditionalStrictMode = ({ children }) => {
   const location = useLocation();
