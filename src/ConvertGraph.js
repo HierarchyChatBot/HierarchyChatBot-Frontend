@@ -44,9 +44,12 @@ const processPrompts = (promptMap, nodeIdCounter, setNodeIdCounter, setEdges, se
         const [c, s] = cleanedKey.split(',').map(Number);
         return { key: [c, s], prompt, originalKey: key };
       })
+      .filter(({ key: [c, s] }) => !isNaN(c) && !isNaN(s)) // Filter out invalid entries
       .sort((a, b) => {
-        if (a.key[0] !== b.key[0]) return a.key[0] - b.key[0];
-        return a.key[1] - b.key[1];
+        const [c1, s1] = a.key;
+        const [c2, s2] = b.key;
+        if (c1 !== c2) return c1 - c2;
+        return s1 - s2;
       });
 
     // Process each sorted entry
@@ -67,6 +70,34 @@ const processPrompts = (promptMap, nodeIdCounter, setNodeIdCounter, setEdges, se
       nodeIdCounter += 1; // Increment local counter
       xOffset += 300; // Increase x-offset by 300 for spacing
     });
+
+
+    // Add the START node first, using baseNode template
+    const SaveNode = {
+      ...baseNode,    // Spread the baseNode properties
+      uniq_id: nodeIdCounter.toString(), // Assign nodeIdCounter as the uniq_id
+      pos_x: xOffset,
+      type: 'STEP',
+      name: 'Save to File',
+      tool: "save_file",
+      description:"save the content to file",
+    };
+
+    newNodes.push(SaveNode); // Add the start node to the nodes array
+    xOffset += 300;
+
+    // Add the START node first, using baseNode template
+    const ToolNode = {
+      ...baseNode,    // Spread the baseNode properties
+      uniq_id: "tool", // Assign nodeIdCounter as the uniq_id
+      pos_x: xOffset,
+      type: 'TOOL',
+      name: 'save_file',
+      nexts: [(nodeIdCounter + 1).toString()], // Connect to the first actual node
+      description:"import os\n\n@tool\ndef save_file(file_path: str, content: str) -> None:\n    \"\"\"\n    :function: save_file\n    :param file_path: Path to the file where the content will be saved\n    :param content: The content to be written to the file\n    :return: True if the file was saved successfully, False otherwise\n    \"\"\"\n    try:\n        with open(file_path, 'w', encoding='utf-8') as file:\n            file.write(content)\n    except Exception as e:\n        print(f\"An error occurred: {e}\")\n",
+    };
+
+    newNodes.push(ToolNode); // Add the start node to the nodes array
 
     // Prepare the final JSON structure
     const jsonData = {
