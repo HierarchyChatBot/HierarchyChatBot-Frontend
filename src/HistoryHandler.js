@@ -36,7 +36,7 @@ export const HistoryProvider = ({ children }) => {
     });
   };
 
-  const removeHistory = (chapterId, subItemId) => {
+  const clearHistory = (chapterId, subItemId) => {
     const key = JSON.stringify([chapterId, subItemId]);
     setHistoryMap(prevMap => {
       const newMap = new Map(prevMap);
@@ -83,7 +83,7 @@ export const HistoryProvider = ({ children }) => {
     <HistoryContext.Provider value={{
       getHistory,
       addMessage,
-      removeHistory,
+      clearHistory,
       resetHistories,
       saveHistoryToJson,
       loadHistoryFromJson,

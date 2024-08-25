@@ -7,7 +7,7 @@ import SERVER_URL from '../config';
 
 const ChatRight = () => {
   const { selectedChapter, selectedSubItem, chapters } = useChapter();
-  const { getHistory, addMessage, getCurrentKey, getChapterIndex, getSubItemIndex } = useHistory();
+  const { getHistory, addMessage, getCurrentKey, getChapterIndex, getSubItemIndex, clearHistory } = useHistory();
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [currentKey, setCurrentKey] = useState('[null, null]');
@@ -83,6 +83,14 @@ const ChatRight = () => {
     }
   };
 
+  const handleClearHistory = () => {
+    if (selectedChapter && selectedSubItem) {
+      const chapterIndex = getChapterIndex(chapters, selectedChapter);
+      const subItemIndex = getSubItemIndex(selectedChapter, selectedSubItem);
+      clearHistory(chapterIndex, subItemIndex);
+    }
+  };
+
   return (
     <div style={{ border: '1px solid #ddd', padding: '20px', backgroundColor: '#f9f9f9' }} className="column">
       <h2>Chat to AI</h2>
@@ -126,6 +134,20 @@ const ChatRight = () => {
           {isLoading ? 'Sending...' : 'Send'}
         </button>
       </form>
+      <button
+        onClick={handleClearHistory}
+        style={{
+          marginTop: '10px',
+          padding: '10px 20px',
+          color: 'white',
+          backgroundColor: '#f44336',
+          border: 'none',
+          borderRadius: '5px',
+          cursor: 'pointer'
+        }}
+      >
+        Clear History
+      </button>
       <div style={{ marginTop: '10px', fontSize: '14px', color: '#555' }}>
         <strong>Current Key:</strong> {currentKey}
       </div>
