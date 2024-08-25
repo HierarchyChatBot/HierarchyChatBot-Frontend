@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useChapter } from '../JsonState';
 import { useHistory } from '../HistoryHandler';
+import SERVER_URL from '../config';
 
 const ChatRight = () => {
   const { selectedChapter, selectedSubItem, chapters } = useChapter();
@@ -59,7 +60,7 @@ const ChatRight = () => {
     });
 
     try {
-      const response = await fetch('http://localhost:5030/process-string', {
+      const response = await fetch(`${SERVER_URL}/process-string`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
