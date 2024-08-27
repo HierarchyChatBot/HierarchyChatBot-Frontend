@@ -11,7 +11,9 @@ const ChatLeft = () => {
     setSelectedSubItem,
     selectedSubItem,
     expandedChapter,
-    setExpandedChapter // Use setExpandedChapter from context
+    setExpandedChapter,
+    mode, // Access the mode
+    setMode, // Access the setMode function
   } = useChapter();
 
   const handleChapterClick = (chapter) => {
@@ -24,9 +26,13 @@ const ChatLeft = () => {
     setSelectedSubItem(subItem);
   };
 
+  const handleModeChange = (e) => {
+    setMode(e.target.value); // Change mode on select
+  };
+
   const renderSubItems = (subItems) => {
     return subItems.map((subItem) => (
-      <div key={subItem.item}> {/* Use the subItem.item as a unique key */}
+      <div key={subItem.item}>
         <div
           style={{
             marginLeft: '20px',
@@ -58,9 +64,29 @@ const ChatLeft = () => {
     flexDirection: 'column',
   };
 
+  const headerStyles = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '20px',
+  };
+
   return (
     <div style={columnStyles} className="column left-column">
-      <h2>Chapters</h2>
+      {/* Flex container for header */}
+      <div style={headerStyles}>
+        <h2>Chapters</h2>
+
+        {/* Dropdown for mode selection */}
+        <div>
+          <label htmlFor="mode-select">Mode: </label>
+          <select id="mode-select" value={mode} onChange={handleModeChange}>
+            <option value="Workflow">Workflow</option>
+            <option value="Consult">Consult</option>
+          </select>
+        </div>
+      </div>
+
       <div style={chaptersListStyles} className="chapters-list">
         {chapters.map((chapter) => (
           <div key={chapter.id}>
@@ -75,7 +101,7 @@ const ChatLeft = () => {
               }}
               onClick={() => handleChapterClick(chapter)}
             >
-              <h3>{chapter.chapter}</h3> {/* Use chapter.chapter instead of chapter.title */}
+              <h3>{chapter.chapter}</h3>
             </div>
             {expandedChapter === chapter && chapter.subItems && renderSubItems(chapter.subItems)}
           </div>

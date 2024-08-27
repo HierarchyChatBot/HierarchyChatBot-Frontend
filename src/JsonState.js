@@ -1,5 +1,3 @@
-// JsonState.js
-
 import React, { createContext, useState, useContext } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -10,18 +8,30 @@ export const ChapterProvider = ({ children }) => {
   const [selectedSubItem, setSelectedSubItem] = useState(null);
   const [chapters, setChapters] = useState([]);
   const [chatHistory, setChatHistory] = useState([]);
-  const [expandedChapter, setExpandedChapter] = useState(null); // Added expandedChapter state
+  const [expandedChapter, setExpandedChapter] = useState(null); 
+  const [mode, setMode] = useState('Workflow'); // Mode state
 
   const addMessage = (message) => {
     setChatHistory(prevHistory => [...prevHistory, message]);
   };
 
+  // Load chapters and dynamically generate 'id' for each chapter
   const loadChaptersFromFile = (file) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
         const data = JSON.parse(e.target.result);
-        setChapters(data.map(chapter => ({ ...chapter, id: uuidv4() })));
+
+        // Set chapters and ensure each chapter gets a unique ID
+        setChapters(data.chapters.map(chapter => ({
+          ...chapter,
+          id: uuidv4(),  // Generate a unique ID for each chapter
+        })));
+
+        // Set the mode from the loaded data, or use default 'Workflow' if not present
+        if (data.mode) {
+          setMode(data.mode);
+        }
       } catch (error) {
         console.error('Error parsing JSON:', error);
       }
@@ -29,8 +39,15 @@ export const ChapterProvider = ({ children }) => {
     reader.readAsText(file);
   };
 
+  // Save chapters excluding the 'id' field from each chapter
   const saveChaptersToFile = (filename) => {
-    const blob = new Blob([JSON.stringify(chapters, null, 2)], { type: 'application/json' });
+    const jsonData = {
+      // Map over chapters and exclude 'id' from being saved
+      chapters: chapters.map(({ id, ...rest }) => rest), 
+      mode: mode // Save current mode
+    };
+
+    const blob = new Blob([JSON.stringify(jsonData, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -60,7 +77,7 @@ export const ChapterProvider = ({ children }) => {
     setChapters([]);
     setSelectedChapter(null);
     setSelectedSubItem(null);
-    setExpandedChapter(null); // Reset expandedChapter
+    setExpandedChapter(null); 
   };
 
   const addSubItem = (chapter, newSubItem) => {
@@ -124,11 +141,13 @@ export const ChapterProvider = ({ children }) => {
         reorderChapters,
         addChapter,
         resetChapters,
-        addSubItem, // Provide addSubItem
-        expandedChapter, // Provide expandedChapter
-        setExpandedChapter, // Provide setExpandedChapter
-        editSubItem, // Add this
-        editSubItemDescription, // Add this
+        addSubItem,
+        expandedChapter,
+        setExpandedChapter,
+        editSubItem,
+        editSubItemDescription,
+        mode, // Provide mode state
+        setMode, // Provide setMode function
       }}
     >
       {children}

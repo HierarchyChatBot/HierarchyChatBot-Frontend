@@ -5,9 +5,9 @@ import { useChapter } from '../JsonState';
 import { useHistory } from '../HistoryHandler';
 
 const ChatMiddle = () => {
-  const { selectedChapter, selectedSubItem, chapters } = useChapter();
-  const { getPrompt, setPrompt, getCurrentKey, getChapterIndex, getSubItemIndex  } = useHistory();
-  
+  const { selectedChapter, selectedSubItem, chapters, mode } = useChapter();
+  const { getPrompt, setPrompt, getCurrentKey, getChapterIndex, getSubItemIndex } = useHistory();
+
   const [editablePrompt, setEditablePrompt] = useState('');
   const [currentKey, setCurrentKey] = useState('[null, null]');
 
@@ -58,14 +58,15 @@ const ChatMiddle = () => {
             </div>
           )}
           <div style={{ marginTop: '20px' }}>
-            <h3>Prompt:</h3>
+            {/* Change the label based on the mode */}
+            <h3>{mode === 'Consult' ? 'Answer:' : 'Prompt:'}</h3>
             <textarea
               value={editablePrompt}
               onChange={handlePromptChange}
               onBlur={handlePromptSave}
               rows="5"
               style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
-              placeholder="Edit the prompt here..."
+              placeholder={mode === 'Consult' ? "Edit the answer here..." : "Edit the prompt here..."}
             />
           </div>
         </div>
