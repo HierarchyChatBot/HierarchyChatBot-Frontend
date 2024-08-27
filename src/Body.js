@@ -8,7 +8,7 @@ import { useConvertGraph } from './ConvertGraph';
 import { useExport } from './ChatBot/Export';
 
 const Body = () => {
-  const { loadChaptersFromFile, saveChaptersToFile, resetChapters } = useChapter();
+  const { loadChaptersFromFile, saveChaptersToFile, resetChapters, mode } = useChapter();
   const { saveHistoryToJson, loadHistoryFromJson, resetHistories } = useHistory();
 
   const [ExportReport] = useExport();
@@ -108,8 +108,13 @@ const Body = () => {
         <button onClick={handleNewClick} style={{ marginLeft: '10px' }}>New Book</button>
         <button onClick={handleSaveSnapshotClick} style={{ marginLeft: '10px' }}>Save Snapshot</button>
         <button onClick={handleLoadSnapshotClick} style={{ marginLeft: '10px' }}>Load Snapshot</button>
-        <button onClick={handleGenGraphClick} style={{ marginLeft: '10px' }}>Gen Graph</button>
-        <button onClick={handleExportClick} style={{ marginLeft: '10px' }}>Export</button>
+        
+        {/* Conditionally render buttons based on mode */}
+        {mode === 'Workflow' ? (
+          <button onClick={handleGenGraphClick} style={{ marginLeft: '10px' }}>Gen Graph</button>
+        ) : (
+          <button onClick={handleExportClick} style={{ marginLeft: '10px' }}>Export Report</button>
+        )}
       </nav>
     </div>
   );

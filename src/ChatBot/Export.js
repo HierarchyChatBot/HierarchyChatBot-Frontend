@@ -3,20 +3,25 @@
 import { useCallback } from 'react';
 import { marked } from 'marked';
 import { useChapter } from '../JsonState'; // Import your context
+import { useHistory } from '../HistoryHandler'; // Import the history context
 
 const useExport = () => {
   const { chapters } = useChapter(); // Access chapters from context
+  const { getPrompt } = useHistory(); // Access getPrompt from context
 
   const handleExport = useCallback(() => {
     // Generate Markdown content from chapters
     const generateMarkdownContent = (chapters) => {
-      return chapters.map(chapter => {
+      return chapters.map((chapter, c) => {
         // Create markdown for chapter
         const chapterMarkdown = `# ${chapter.chapter}\n\n${chapter.description}`;
 
         // Create markdown for sub-items
-        const subItemsMarkdown = chapter.subItems.map(subItem => {
-          return `## ${subItem.item}\n\n${subItem.description}`;
+        const subItemsMarkdown = chapter.subItems.map((subItem, s) => {
+          // Get the prompt for the current chapter and sub-item
+          const prompt = getPrompt(c, s);
+
+          return `## ${subItem.item}\n\n${subItem.description}\n\n**Answer:**\n\n${prompt || ''}`;
         }).join('\n\n');
 
         // Combine chapter and sub-items markdown
@@ -42,6 +47,7 @@ const useExport = () => {
             }
             .container {
               display: flex;
+              height: 100vh; /* Full viewport height */
             }
             .left-column {
               width: 20%;
@@ -54,12 +60,17 @@ const useExport = () => {
               padding: 20px;
               box-sizing: border-box;
             }
+            h1 {
+              text-align: center; /* Center-align headers */
+            }
+            p, ul, ol, h2, h3, h4, h5, h6 {
+              text-align: left; /* Keep paragraphs and lists left-aligned */
+            }
           </style>
         </head>
         <body>
           <div class="container">
             <div class="left-column">
-              <!-- Left column content can go here -->
               <p>LangGraph Chatbot</p>
             </div>
             <div class="content-column">
@@ -69,6 +80,8 @@ const useExport = () => {
         </body>
       </html>
     `;
+  
+  
 
     // Create a temporary container to hold the HTML content
     const container = document.createElement('div');
@@ -83,10 +96,9 @@ const useExport = () => {
     htmlLink.click();
     URL.revokeObjectURL(htmlUrl); // Clean up the URL object
 
-
     // Optional: Clean up the temporary container
     container.remove();
-  }, [chapters]);
+  }, [chapters, getPrompt]);
 
   return [handleExport];
 };
