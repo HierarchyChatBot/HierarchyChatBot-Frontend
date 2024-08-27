@@ -1,3 +1,5 @@
+// JsonState.js
+
 import React, { createContext, useState, useContext } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -9,13 +11,12 @@ export const ChapterProvider = ({ children }) => {
   const [chapters, setChapters] = useState([]);
   const [chatHistory, setChatHistory] = useState([]);
   const [expandedChapter, setExpandedChapter] = useState(null); 
-  const [mode, setMode] = useState('Workflow'); // Mode state
+  const [mode, setMode] = useState('Workflow');
 
   const addMessage = (message) => {
     setChatHistory(prevHistory => [...prevHistory, message]);
   };
 
-  // Load chapters and dynamically generate 'id' for each chapter
   const loadChaptersFromFile = (file) => {
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -39,14 +40,27 @@ export const ChapterProvider = ({ children }) => {
     reader.readAsText(file);
   };
 
-  // Save chapters excluding the 'id' field from each chapter
   const saveChaptersToFile = (filename) => {
-    const jsonData = {
-      // Map over chapters and exclude 'id' from being saved
-      chapters: chapters.map(({ id, ...rest }) => rest), 
-      mode: mode // Save current mode
+    // Function to recursively remove 'id' fields from items
+    const removeIds = (item) => {
+      if (Array.isArray(item)) {
+        return item.map(removeIds); // Process array elements
+      } else if (typeof item === 'object' && item !== null) {
+        // Remove 'id' and recursively process nested objects
+        const { id, ...rest } = item;
+        const updatedObject = Object.fromEntries(
+          Object.entries(rest).map(([key, value]) => [key, removeIds(value)])
+        );
+        return updatedObject;
+      }
+      return item; // Return primitive values as-is
     };
-
+  
+    const jsonData = {
+      chapters: removeIds(chapters),
+      mode: mode
+    };
+  
     const blob = new Blob([JSON.stringify(jsonData, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -55,7 +69,6 @@ export const ChapterProvider = ({ children }) => {
     a.click();
     URL.revokeObjectURL(url);
   };
-
   const removeChapter = (chapterToRemove) => {
     setChapters(prevChapters => prevChapters.filter(chapter => chapter.id !== chapterToRemove.id));
   };
@@ -146,8 +159,8 @@ export const ChapterProvider = ({ children }) => {
         setExpandedChapter,
         editSubItem,
         editSubItemDescription,
-        mode, // Provide mode state
-        setMode, // Provide setMode function
+        mode,
+        setMode,
       }}
     >
       {children}
