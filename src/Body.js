@@ -4,18 +4,20 @@ import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useChapter } from './JsonState';
 import { useHistory } from './HistoryHandler';
-import { useConvertGraph } from './ConvertGraph';  // Import the custom hook
+import { useConvertGraph } from './ConvertGraph';
+import { useExport } from './ChatBot/Export';
 
 const Body = () => {
   const { loadChaptersFromFile, saveChaptersToFile, resetChapters } = useChapter();
   const { saveHistoryToJson, loadHistoryFromJson, resetHistories } = useHistory();
+
+  const [ExportReport] = useExport();
 
   const fileInputRef = useRef(null);
   const chatFileInputRef = useRef(null);
 
   const generateGraph = useConvertGraph();
 
-  // Handler functions
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -38,10 +40,6 @@ const Body = () => {
 
   const handleButtonClick = () => {
     fileInputRef.current.click();
-  };
-
-  const handleChatButtonClick = () => {
-    chatFileInputRef.current.click();
   };
 
   const handleSaveClick = () => {
@@ -72,6 +70,11 @@ const Body = () => {
 
   const handleGenGraphClick = () => {
     generateGraph();
+  };
+
+  // Toggle export modal
+  const handleExportClick = () => {
+    ExportReport();
   };
 
   return (
@@ -106,6 +109,7 @@ const Body = () => {
         <button onClick={handleSaveSnapshotClick} style={{ marginLeft: '10px' }}>Save Snapshot</button>
         <button onClick={handleLoadSnapshotClick} style={{ marginLeft: '10px' }}>Load Snapshot</button>
         <button onClick={handleGenGraphClick} style={{ marginLeft: '10px' }}>Gen Graph</button>
+        <button onClick={handleExportClick} style={{ marginLeft: '10px' }}>Export</button>
       </nav>
     </div>
   );
