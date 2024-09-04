@@ -44,6 +44,9 @@ const ChatMiddle = () => {
     backgroundColor: '#f9f9f9',
   };
 
+  // Check if currentKey contains "null"
+  const isNullKey = currentKey.includes('null');
+
   return (
     <div style={columnStyles} className="column">
       <h2>Chapter Description</h2>
@@ -57,18 +60,25 @@ const ChatMiddle = () => {
               <p>{selectedSubItem.description}</p>
             </div>
           )}
-          <div style={{ marginTop: '20px' }}>
-            {/* Change the label based on the mode */}
-            <h3>{mode === 'Consult' ? 'Answer:' : 'Prompt:'}</h3>
-            <textarea
-              value={editablePrompt}
-              onChange={handlePromptChange}
-              onBlur={handlePromptSave}
-              rows="5"
-              style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
-              placeholder={mode === 'Consult' ? "Edit the answer here..." : "Edit the prompt here..."}
-            />
-          </div>
+
+          {/* Conditional Rendering based on isNullKey */}
+          {!isNullKey ? (
+            <div style={{ marginTop: '20px' }}>
+              <h3>{mode === 'Consult' ? 'Answer:' : 'Prompt:'}</h3>
+              <textarea
+                value={editablePrompt}
+                onChange={handlePromptChange}
+                onBlur={handlePromptSave}
+                rows="5"
+                style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
+                placeholder={mode === 'Consult' ? "Edit the answer here..." : "Edit the prompt here..."}
+              />
+            </div>
+          ) : (
+            <div style={{ marginTop: '20px', color: 'red' }}>
+              <p>Please choose a sub-chapter</p>
+            </div>
+          )}
         </div>
       ) : (
         <p>Select a chapter to view its description.</p>

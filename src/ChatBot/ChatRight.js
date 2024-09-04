@@ -91,63 +91,77 @@ const ChatRight = () => {
     }
   };
 
+  // Check if currentKey contains "null"
+  const isNullKey = currentKey.includes('null');
+
   return (
     <div style={{ border: '1px solid #ddd', padding: '20px', backgroundColor: '#f9f9f9' }} className="column">
       <h2>Chat to AI</h2>
-      <div style={{ marginBottom: '20px', height: '300px', overflowY: 'scroll', border: '1px solid #ccc', padding: '10px' }}>
-        {getHistory(selectedChapter ? getChapterIndex(chapters, selectedChapter) : '', selectedSubItem ? getSubItemIndex(selectedChapter, selectedSubItem) : '').map((msg, index) => (
-          <div
-            key={index}
+
+      {/* Conditionally render based on isNullKey */}
+      {!isNullKey ? (
+        <>
+          <div style={{ marginBottom: '20px', height: '300px', overflowY: 'scroll', border: '1px solid #ccc', padding: '10px' }}>
+            {getHistory(selectedChapter ? getChapterIndex(chapters, selectedChapter) : '', selectedSubItem ? getSubItemIndex(selectedChapter, selectedSubItem) : '').map((msg, index) => (
+              <div
+                key={index}
+                style={{
+                  alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start',
+                  backgroundColor: msg.sender === 'user' ? '#e0f7fa' : '#e8eaf6',
+                  padding: '10px',
+                  borderRadius: '8px',
+                  marginBottom: '5px',
+                }}
+              >
+                <strong>{msg.sender === 'user' ? 'You' : 'Bot'}: </strong>
+                <span>{msg.text}</span>
+              </div>
+            ))}
+          </div>
+          <form onSubmit={handleSubmit} style={{ display: 'flex' }}>
+            <input
+              type="text"
+              value={inputValue}
+              onChange={handleInputChange}
+              placeholder="Type a message"
+              style={{ flex: 1, marginRight: '10px', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
+            />
+            <button 
+              type="submit" 
+              style={{ 
+                padding: '10px 20px', 
+                color: 'white', 
+                backgroundColor: isLoading ? '#b0bec5' : '#6200ea', 
+                border: 'none', 
+                borderRadius: '5px', 
+                cursor: 'pointer' 
+              }}
+              disabled={isLoading}
+            >
+              {isLoading ? 'Sending...' : 'Send'}
+            </button>
+          </form>
+          <button
+            onClick={handleClearHistory}
             style={{
-              alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start',
-              backgroundColor: msg.sender === 'user' ? '#e0f7fa' : '#e8eaf6',
-              padding: '10px',
-              borderRadius: '8px',
-              marginBottom: '5px',
+              marginTop: '10px',
+              padding: '10px 20px',
+              color: 'white',
+              backgroundColor: '#f44336',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer'
             }}
           >
-            <strong>{msg.sender === 'user' ? 'You' : 'Bot'}: </strong>
-            <span>{msg.text}</span>
-          </div>
-        ))}
-      </div>
-      <form onSubmit={handleSubmit} style={{ display: 'flex' }}>
-        <input
-          type="text"
-          value={inputValue}
-          onChange={handleInputChange}
-          placeholder="Type a message"
-          style={{ flex: 1, marginRight: '10px', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
-        />
-        <button 
-          type="submit" 
-          style={{ 
-            padding: '10px 20px', 
-            color: 'white', 
-            backgroundColor: isLoading ? '#b0bec5' : '#6200ea', 
-            border: 'none', 
-            borderRadius: '5px', 
-            cursor: 'pointer' 
-          }}
-          disabled={isLoading}
-        >
-          {isLoading ? 'Sending...' : 'Send'}
-        </button>
-      </form>
-      <button
-        onClick={handleClearHistory}
-        style={{
-          marginTop: '10px',
-          padding: '10px 20px',
-          color: 'white',
-          backgroundColor: '#f44336',
-          border: 'none',
-          borderRadius: '5px',
-          cursor: 'pointer'
-        }}
-      >
-        Clear History
-      </button>
+            Clear History
+          </button>
+        </>
+      ) : (
+        <div style={{ marginTop: '20px', color: 'red' }}>
+          <p>Please choose a chapter with a sub-chapter to chat with AI.</p>
+        </div>
+      )}
+
       <div style={{ marginTop: '10px', fontSize: '14px', color: '#555' }}>
         <strong>Current Key:</strong> {currentKey}
       </div>
