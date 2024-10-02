@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useChapter } from '../JsonState';
 import { useHistory } from '../HistoryHandler';
 import SERVER_URL from '../config';
+import ConfigManager from '../ConfigManager';  // Import ConfigManager to handle settings
 
 const ChatRight = () => {
   const { selectedChapter, selectedSubItem, chapters } = useChapter();
@@ -11,6 +12,9 @@ const ChatRight = () => {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [currentKey, setCurrentKey] = useState('[null, null]');
+
+  // Fetch llm_model and open_ai_key from ConfigManager
+  const { llmModel, openAiKey } = ConfigManager.getSettings();
 
   useEffect(() => {
     setCurrentKey(getCurrentKey(chapters, selectedChapter, selectedSubItem));
@@ -65,7 +69,11 @@ const ChatRight = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ input_string: compressedHistory }),
+        body: JSON.stringify({
+          input_string: compressedHistory,
+          llm_model: llmModel,  // Add llm_model from ConfigManager
+          open_ai_key: openAiKey  // Add open_ai_key from ConfigManager
+        }),
       });
 
       if (!response.ok) {

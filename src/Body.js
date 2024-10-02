@@ -1,22 +1,24 @@
 // Body.js
 
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';  // Import useState
 import { Link } from 'react-router-dom';
 import { useChapter } from './JsonState';
 import { useHistory } from './HistoryHandler';
 import { useConvertGraph } from './ConvertGraph';
 import { useExport } from './ChatBot/Export';
+import ConfigWindow from './ConfigWindow';  // Import ConfigWindow
 
 const Body = () => {
   const { loadChaptersFromFile, saveChaptersToFile, resetChapters, mode } = useChapter();
   const { saveHistoryToJson, loadHistoryFromJson, resetHistories } = useHistory();
-
   const [ExportReport] = useExport();
 
   const fileInputRef = useRef(null);
   const chatFileInputRef = useRef(null);
-
   const generateGraph = useConvertGraph();
+
+  // State for showing the ConfigWindow
+  const [showConfig, setShowConfig] = useState(false);  // Manage state for config window
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -77,6 +79,11 @@ const Body = () => {
     ExportReport();
   };
 
+  // Toggle config modal
+  const handleConfig = () => {
+    setShowConfig(true);  // Show the ConfigWindow when this is called
+  };
+
   return (
     <div>
       <nav>
@@ -108,13 +115,21 @@ const Body = () => {
         <button onClick={handleNewClick} style={{ marginLeft: '10px' }}>New Book</button>
         <button onClick={handleSaveSnapshotClick} style={{ marginLeft: '10px' }}>Save Snapshot</button>
         <button onClick={handleLoadSnapshotClick} style={{ marginLeft: '10px' }}>Load Snapshot</button>
-        
+
         {/* Conditionally render buttons based on mode */}
         {mode === 'Workflow' ? (
           <button onClick={handleGenGraphClick} style={{ marginLeft: '10px' }}>Gen Graph</button>
         ) : (
           <button onClick={handleExportClick} style={{ marginLeft: '10px' }}>Export Report</button>
         )}
+
+        <button onClick={handleLoadSnapshotClick} style={{ marginLeft: '10px' }}>Load Snapshot</button>
+
+        {/* Config button */}
+        <button onClick={handleConfig} style={{ marginLeft: '10px' }}>Config</button>
+
+        {/* Conditionally render the ConfigWindow */}
+        {showConfig && <ConfigWindow onClose={() => setShowConfig(false)} />}
       </nav>
     </div>
   );
