@@ -83,6 +83,7 @@ const ChatLeft = () => {
           <select id="mode-select" value={mode} onChange={handleModeChange}>
             <option value="Workflow">Workflow</option>
             <option value="Consult">Consult</option>
+            <option value="Automation">Automation</option>
           </select>
         </div>
       </div>
