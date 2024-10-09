@@ -4,7 +4,7 @@ import React from 'react';
 import { useGraphManager } from '../Graph/GraphManager'; // Use GraphManager for nodes
 import { useChapter } from '../JsonState';
 
-const AutoLeft = () => {
+const AutoLeft = ({ selectedNode, setSelectedNode }) => {
   // Access nodes from GraphManager
   const { nodes } = useGraphManager();
   const {
@@ -32,6 +32,19 @@ const AutoLeft = () => {
     marginBottom: '20px',
   };
 
+  const selectedNodeStyles = {
+    backgroundColor: '#e0f7fa', // Light blue background for selected node
+    border: '1px solid #00796b', // Darker border for selected node
+  };
+
+  // Handle node selection
+  const handleNodeSelect = (node) => {
+    setSelectedNode(node); // Update selected node
+  };
+
+  // Filter nodes to show only those with type "INFO"
+  const infoNodes = nodes.filter(node => node.data.type === "INFO");
+
   return (
     <div style={columnStyles} className="column left-column">
       {/* Flex container for header */}
@@ -49,14 +62,27 @@ const AutoLeft = () => {
         </div>
       </div>
 
-      {/* Display each node's ID and type */}
+      {/* Display only "INFO" nodes */}
       <div className="nodes-list">
-        {nodes.map((node) => (
-          <div key={node.id} style={{ marginBottom: '10px', padding: '10px', border: '1px solid #ccc' }}>
-            <p><strong>Node ID:</strong> {node.id}</p>
-            <p><strong>Node Type:</strong> {node.data.type}</p>
-          </div>
-        ))}
+        {infoNodes.length === 0 ? (
+          <p>No INFO nodes available.</p> // Show a message if no INFO nodes
+        ) : (
+          infoNodes.map((node) => (
+            <div 
+              key={node.id} 
+              style={{ 
+                marginBottom: '10px', 
+                padding: '10px', 
+                border: '1px solid #ccc', 
+                ...(selectedNode && selectedNode.id === node.id ? selectedNodeStyles : {}) // Apply styles if selected
+              }} 
+              onClick={() => handleNodeSelect(node)} // Handle node click
+            >
+              <p><strong>Node ID:</strong> {node.id}</p>
+              <p><strong>Node Type:</strong> {node.data.type}</p>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

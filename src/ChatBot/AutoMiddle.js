@@ -1,90 +1,93 @@
 // AutoMiddle.js
 
-import React, { useState, useEffect } from 'react';
-import { useChapter } from '../JsonState';
-import { useHistory } from '../HistoryHandler';
+import React, { useEffect, useState } from 'react';
+import { useGraphManager } from '../Graph/GraphManager';
 
-const AutoMiddle = () => {
-  const { selectedChapter, selectedSubItem, chapters, mode } = useChapter();
-  const { getPrompt, setPrompt, getCurrentKey, getChapterIndex, getSubItemIndex } = useHistory();
+const AutoMiddle = ({ selectedNode, setSelectedNode }) => {
+  const { nodes, setNodes } = useGraphManager(); // Access nodes and setNodes
+  const [description, setDescription] = useState('');
+  const [info, setInfo] = useState('');
 
-  const [editablePrompt, setEditablePrompt] = useState('');
-  const [currentKey, setCurrentKey] = useState('[null, null]');
-
+  // Set the local state when the selectedNode changes
   useEffect(() => {
-    if (selectedChapter && selectedSubItem) {
-      const chapterIndex = getChapterIndex(chapters, selectedChapter);
-      const subItemIndex = getSubItemIndex(selectedChapter, selectedSubItem);
-      
-      setCurrentKey(getCurrentKey(chapters, selectedChapter, selectedSubItem));
-      
-      const prompt = getPrompt(chapterIndex, subItemIndex);
-      setEditablePrompt(prompt || '');
-    } else {
-      setCurrentKey('[null, null]');
-      setEditablePrompt('');
+    if (selectedNode) {
+      setDescription(selectedNode.data.description || '');
+      setInfo(selectedNode.data.info || '');
     }
-  }, [selectedChapter, selectedSubItem, getPrompt, chapters, getCurrentKey]);
+  }, [selectedNode]);
 
-  const handlePromptChange = (e) => {
-    setEditablePrompt(e.target.value);
-  };
+  // Handle changes to the description field
+  const handleDescriptionChange = (e) => {
+    const newDescription = e.target.value;
+    setDescription(newDescription);
 
-  const handlePromptSave = () => {
-    if (selectedChapter && selectedSubItem) {
-      const chapterIndex = getChapterIndex(chapters, selectedChapter);
-      const subItemIndex = getSubItemIndex(selectedChapter, selectedSubItem);
-      setPrompt(chapterIndex, subItemIndex, editablePrompt);
+    // Update the selected node in GraphManager
+    if (selectedNode) {
+      setNodes((prevNodes) =>
+        prevNodes.map((node) =>
+          node.id === selectedNode.id
+            ? {
+                ...node,
+                data: {
+                  ...node.data,
+                  description: newDescription, // Update the description in the selectedNode
+                },
+              }
+            : node
+        )
+      );
     }
   };
 
-  const columnStyles = {
-    border: '1px solid #ddd',
-    padding: '20px',
-    backgroundColor: '#f9f9f9',
+  // Handle changes to the info field
+  const handleInfoChange = (e) => {
+    const newInfo = e.target.value;
+    setInfo(newInfo);
+
+    // Update the selected node in GraphManager
+    if (selectedNode) {
+      setNodes((prevNodes) =>
+        prevNodes.map((node) =>
+          node.id === selectedNode.id
+            ? {
+                ...node,
+                data: {
+                  ...node.data,
+                  info: newInfo, // Update the info in the selectedNode
+                },
+              }
+            : node
+        )
+      );
+    }
   };
 
-  // Check if currentKey contains "null"
-  const isNullKey = currentKey.includes('null');
+  if (!selectedNode) {
+    return <p>Please select a node to see its details.</p>;
+  }
 
   return (
-    <div style={columnStyles} className="column">
-      <h2>Workflow Prompt</h2>
-      {selectedChapter ? (
-        <div>
-          <h3>{selectedChapter.title}</h3>
-          <p>{selectedChapter.description}</p>
-          {selectedSubItem && (
-            <div>
-              <h4>{selectedSubItem.title}</h4>
-              <p>{selectedSubItem.description}</p>
-            </div>
-          )}
-
-          {/* Conditional Rendering based on isNullKey */}
-          {!isNullKey ? (
-            <div style={{ marginTop: '20px' }}>
-              <h3>{mode === 'Automation' ? 'Automation:' : 'Automation:'}</h3>
-              <textarea
-                value={editablePrompt}
-                onChange={handlePromptChange}
-                onBlur={handlePromptSave}
-                rows="5"
-                style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
-                placeholder={mode === 'Automation' ? "Edit the Automation here..." : "Edit the Automation here..."}
-              />
-            </div>
-          ) : (
-            <div style={{ marginTop: '20px', color: 'red' }}>
-              <p>Please choose a sub-chapter</p>
-            </div>
-          )}
-        </div>
-      ) : (
-        <p>Select a chapter to view its description.</p>
-      )}
-      <div style={{ marginTop: '10px', fontSize: '14px', color: '#555' }}>
-        <strong>Current Key:</strong> {currentKey}
+    <div style={{ padding: '20px', border: '1px solid #ddd', backgroundColor: '#f9f9f9' }}>
+      <h3>Node Details</h3>
+      <div style={{ marginTop: '10px' }}>
+        <label htmlFor="info">Question:</label>
+        <textarea
+          id="info"
+          value={info}
+          onChange={handleInfoChange}
+          rows="4" // Number of rows for the textarea
+          style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
+        />
+      </div>
+      <div>
+        <label htmlFor="description">Data:</label>
+        <textarea
+          id="description"
+          value={description}
+          onChange={handleDescriptionChange}
+          rows="4" // Number of rows for the textarea
+          style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
+        />
       </div>
     </div>
   );
