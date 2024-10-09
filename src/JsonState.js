@@ -10,13 +10,16 @@ export const ChapterProvider = ({ children }) => {
   const [selectedSubItem, setSelectedSubItem] = useState(null);
   const [chapters, setChapters] = useState([]);
   const [chatHistory, setChatHistory] = useState([]);
-  const [expandedChapter, setExpandedChapter] = useState(null); 
+  const [expandedChapter, setExpandedChapter] = useState(null);
   const [mode, setMode] = useState('Workflow');
+  const [selectedNode, setSelectedNode] = useState(null);
 
+  // Add message to chat history
   const addMessage = (message) => {
-    setChatHistory(prevHistory => [...prevHistory, message]);
+    setChatHistory((prevHistory) => [...prevHistory, message]);
   };
 
+  // Load chapters from file
   const loadChaptersFromFile = (file) => {
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -24,10 +27,12 @@ export const ChapterProvider = ({ children }) => {
         const data = JSON.parse(e.target.result);
 
         // Set chapters and ensure each chapter gets a unique ID
-        setChapters(data.chapters.map(chapter => ({
-          ...chapter,
-          id: uuidv4(),  // Generate a unique ID for each chapter
-        })));
+        setChapters(
+          data.chapters.map((chapter) => ({
+            ...chapter,
+            id: uuidv4(), // Generate a unique ID for each chapter
+          }))
+        );
 
         // Set the mode from the loaded data, or use default 'Workflow' if not present
         if (data.mode) {
@@ -40,28 +45,28 @@ export const ChapterProvider = ({ children }) => {
     reader.readAsText(file);
   };
 
+  // Save chapters to file
   const saveChaptersToFile = (filename) => {
-    // Function to recursively remove 'id' fields from items
     const removeIds = (item) => {
       if (Array.isArray(item)) {
-        return item.map(removeIds); // Process array elements
+        return item.map(removeIds);
       } else if (typeof item === 'object' && item !== null) {
-        // Remove 'id' and recursively process nested objects
         const { id, ...rest } = item;
-        const updatedObject = Object.fromEntries(
+        return Object.fromEntries(
           Object.entries(rest).map(([key, value]) => [key, removeIds(value)])
         );
-        return updatedObject;
       }
-      return item; // Return primitive values as-is
+      return item;
     };
-  
+
     const jsonData = {
       chapters: removeIds(chapters),
-      mode: mode
+      mode: mode,
     };
-  
-    const blob = new Blob([JSON.stringify(jsonData, null, 2)], { type: 'application/json' });
+
+    const blob = new Blob([JSON.stringify(jsonData, null, 2)], {
+      type: 'application/json',
+    });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -69,10 +74,15 @@ export const ChapterProvider = ({ children }) => {
     a.click();
     URL.revokeObjectURL(url);
   };
+
+  // Remove a chapter
   const removeChapter = (chapterToRemove) => {
-    setChapters(prevChapters => prevChapters.filter(chapter => chapter.id !== chapterToRemove.id));
+    setChapters((prevChapters) =>
+      prevChapters.filter((chapter) => chapter.id !== chapterToRemove.id)
+    );
   };
 
+  // Reorder chapters
   const reorderChapters = (startIndex, endIndex) => {
     setChapters((prevChapters) => {
       const newChapters = Array.from(prevChapters);
@@ -82,20 +92,26 @@ export const ChapterProvider = ({ children }) => {
     });
   };
 
+  // Add a new chapter
   const addChapter = (newChapter) => {
-    setChapters(prevChapters => [...prevChapters, { ...newChapter, id: uuidv4() }]);
+    setChapters((prevChapters) => [
+      ...prevChapters,
+      { ...newChapter, id: uuidv4() },
+    ]);
   };
 
+  // Reset chapters
   const resetChapters = () => {
     setChapters([]);
     setSelectedChapter(null);
     setSelectedSubItem(null);
-    setExpandedChapter(null); 
+    setExpandedChapter(null);
   };
 
+  // Add a sub-item to a chapter
   const addSubItem = (chapter, newSubItem) => {
-    setChapters(prevChapters => 
-      prevChapters.map(ch =>
+    setChapters((prevChapters) =>
+      prevChapters.map((ch) =>
         ch.id === chapter.id
           ? { ...ch, subItems: [...ch.subItems, newSubItem] }
           : ch
@@ -103,34 +119,36 @@ export const ChapterProvider = ({ children }) => {
     );
   };
 
+  // Edit sub-item title
   const editSubItem = (chapter, subItemToEdit, newTitle) => {
-    setChapters(prevChapters =>
-      prevChapters.map(ch =>
+    setChapters((prevChapters) =>
+      prevChapters.map((ch) =>
         ch.id === chapter.id
           ? {
               ...ch,
-              subItems: ch.subItems.map(subItem =>
+              subItems: ch.subItems.map((subItem) =>
                 subItem.item === subItemToEdit.item
                   ? { ...subItem, item: newTitle }
                   : subItem
-              )
+              ),
             }
           : ch
       )
     );
   };
 
+  // Edit sub-item description
   const editSubItemDescription = (chapter, subItemToEdit, newDescription) => {
-    setChapters(prevChapters =>
-      prevChapters.map(ch =>
+    setChapters((prevChapters) =>
+      prevChapters.map((ch) =>
         ch.id === chapter.id
           ? {
               ...ch,
-              subItems: ch.subItems.map(subItem =>
+              subItems: ch.subItems.map((subItem) =>
                 subItem.item === subItemToEdit.item
                   ? { ...subItem, description: newDescription }
                   : subItem
-              )
+              ),
             }
           : ch
       )
@@ -161,6 +179,8 @@ export const ChapterProvider = ({ children }) => {
         editSubItemDescription,
         mode,
         setMode,
+        selectedNode,
+        setSelectedNode,
       }}
     >
       {children}

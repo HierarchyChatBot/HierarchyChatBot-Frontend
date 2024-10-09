@@ -2,13 +2,14 @@
 
 import React, { useEffect, useState } from 'react';
 import { useGraphManager } from '../Graph/GraphManager';
+import { useChapter } from '../JsonState';
 
-const AutoMiddle = ({ selectedNode, setSelectedNode }) => {
-  const { nodes, setNodes } = useGraphManager(); // Access nodes and setNodes
+const AutoMiddle = () => {
+  const { nodes, setNodes } = useGraphManager();
+  const { selectedNode } = useChapter(); // Use selectedNode from useChapter
   const [description, setDescription] = useState('');
   const [info, setInfo] = useState('');
 
-  // Set the local state when the selectedNode changes
   useEffect(() => {
     if (selectedNode) {
       setDescription(selectedNode.data.description || '');
@@ -16,12 +17,10 @@ const AutoMiddle = ({ selectedNode, setSelectedNode }) => {
     }
   }, [selectedNode]);
 
-  // Handle changes to the description field
   const handleDescriptionChange = (e) => {
     const newDescription = e.target.value;
     setDescription(newDescription);
 
-    // Update the selected node in GraphManager
     if (selectedNode) {
       setNodes((prevNodes) =>
         prevNodes.map((node) =>
@@ -30,7 +29,7 @@ const AutoMiddle = ({ selectedNode, setSelectedNode }) => {
                 ...node,
                 data: {
                   ...node.data,
-                  description: newDescription, // Update the description in the selectedNode
+                  description: newDescription
                 },
               }
             : node
@@ -39,12 +38,10 @@ const AutoMiddle = ({ selectedNode, setSelectedNode }) => {
     }
   };
 
-  // Handle changes to the info field
   const handleInfoChange = (e) => {
     const newInfo = e.target.value;
     setInfo(newInfo);
 
-    // Update the selected node in GraphManager
     if (selectedNode) {
       setNodes((prevNodes) =>
         prevNodes.map((node) =>
@@ -53,7 +50,7 @@ const AutoMiddle = ({ selectedNode, setSelectedNode }) => {
                 ...node,
                 data: {
                   ...node.data,
-                  info: newInfo, // Update the info in the selectedNode
+                  info: newInfo
                 },
               }
             : node
@@ -75,7 +72,7 @@ const AutoMiddle = ({ selectedNode, setSelectedNode }) => {
           id="info"
           value={info}
           onChange={handleInfoChange}
-          rows="4" // Number of rows for the textarea
+          rows="10"
           style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
         />
       </div>
@@ -85,7 +82,7 @@ const AutoMiddle = ({ selectedNode, setSelectedNode }) => {
           id="description"
           value={description}
           onChange={handleDescriptionChange}
-          rows="4" // Number of rows for the textarea
+          rows="10"
           style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
         />
       </div>

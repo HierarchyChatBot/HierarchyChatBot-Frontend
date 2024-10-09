@@ -1,6 +1,6 @@
 // ChatLayout.js
 
-import React, { useState } from 'react';
+import React from 'react';
 import ChatLeft from './ChatLeft';
 import ChatMiddle from './ChatMiddle';
 import ChatRight from './ChatRight';
@@ -10,7 +10,6 @@ import { useChapter } from '../JsonState';
 
 const ChatLayout = () => {
   const { mode } = useChapter(); // Get the mode from useChapter
-  const [selectedNode, setSelectedNode] = useState(null); // Track the selected node
 
   const baseStyles = {
     display: 'grid',
@@ -21,16 +20,8 @@ const ChatLayout = () => {
 
   return (
     <div style={baseStyles} className="three-column-layout">
-      {mode === 'Automation' ? (
-        <AutoLeft selectedNode={selectedNode} setSelectedNode={setSelectedNode} />
-      ) : (
-        <ChatLeft />
-      )}
-      {mode === 'Automation' ? (
-        <AutoMiddle selectedNode={selectedNode} setSelectedNode={setSelectedNode} />
-      ) : (
-        <ChatMiddle />
-      )}
+      {mode === 'Automation' ? <AutoLeft /> : <ChatLeft />}
+      {mode === 'Automation' ? <AutoMiddle /> : <ChatMiddle />}
       <ChatRight />
     </div>
   );
