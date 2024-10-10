@@ -5,7 +5,7 @@ import { useGraphManager } from '../Graph/GraphManager';
 import { useChapter } from '../JsonState';
 
 const AutoMiddle = () => {
-  const { nodes, setNodes } = useGraphManager();
+  const { setNodes } = useGraphManager();
   const { selectedNode } = useChapter(); // Use selectedNode from useChapter
   const [description, setDescription] = useState('');
   const [info, setInfo] = useState('');
