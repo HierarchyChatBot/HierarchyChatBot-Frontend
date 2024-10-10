@@ -40,7 +40,10 @@ const AutoLeft = () => {
     border: '1px solid #00796b',
   };
 
-  const infoNodes = nodes.filter((node) => node.data.type === 'INFO');
+  // Filter and sort nodes
+  const infoNodes = nodes
+    .filter((node) => node.data.type === 'INFO')
+    .sort((a, b) => a.data.name.localeCompare(b.data.name, undefined, { sensitivity: 'base' }));
 
   return (
     <div style={columnStyles} className="column left-column">
@@ -71,8 +74,7 @@ const AutoLeft = () => {
               }}
               onClick={() => handleNodeSelect(node)}
             >
-              <p><strong>Node ID:</strong> {node.id}</p>
-              <p><strong>Node Type:</strong> {node.data.type}</p>
+              <p><strong>Node Name:</strong> {node.data.name}</p>
             </div>
           ))
         )}
